@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:world_builder/ui/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const LoginScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      final tween = Tween(begin: begin, end: end);
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: curve,
+      );
+
+      return SlideTransition(
+        position: tween.animate(curvedAnimation),
+        child: child,
+      );
+    },
+  );
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -67,7 +91,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     primary: Colors.white,
                     elevation: 0,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(_createRoute());
+                  },
                   child: Text(
                     "INGRESAR",
                     style: GoogleFonts.play(fontSize: 18),
