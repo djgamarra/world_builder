@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "424763274120",
+    "project_id": "world-builder-8f61c",
+    "storage_bucket": "world-builder-8f61c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424763274120:android:fa1575458fed1ce3f5803d",
+        "android_client_info": {
+          "package_name": "com.uninorte.storytime.world_builder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424763274120-5ghe8pimos2ouu8qn6pm8cbk997klp4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAehbrg5d1M1YiYu2Njbjhc5jU9GpMTPlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424763274120-5ghe8pimos2ouu8qn6pm8cbk997klp4t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
