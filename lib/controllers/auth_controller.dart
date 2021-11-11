@@ -1,21 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:world_builder/services/authentication_service.dart';
+import 'package:world_builder/services/firestore_service.dart';
 
 enum AuthStatus { withError, loading, loggedIn, loggedOut }
 
 class AuthController {
+  late final AuthenticationService _auth;
+  late final FirestoreService _store;
+
   final currentStatus = Rx<AuthStatus>(AuthStatus.loading);
   final currentUser = Rx<User?>(null);
   final errorMessage = Rx<String?>(null);
 
-  FirebaseAuth get auth => FirebaseAuth.instance;
-  FirebaseFirestore get store => FirebaseFirestore.instance;
+  AuthController({
+    required AuthenticationService authenticationService,
+    required FirestoreService firestoreService,
+  }) {
+    _auth = authenticationService;
+    _store = firestoreService;
+  }
 
   void init() async {
-    await Firebase.initializeApp();
-    auth.userChanges().listen((user) {
+    _auth.subscribeToChanges((user) {
       if (user == null) {
         currentStatus.value = AuthStatus.loggedOut;
       } else {
@@ -29,11 +36,9 @@ class AuthController {
   void login(String email, String password) async {
     try {
       _resetErrorCode();
-      await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await _auth.login(email, password);
     } on FirebaseAuthException catch (e) {
+      print(e);
       switch (e.code) {
         case 'invalid-email':
         case 'user-not-found':
@@ -46,24 +51,29 @@ class AuthController {
         default:
           errorMessage.value = 'Error de conexión';
       }
-    } catch (_) {
+    } catch (e) {
+      print(e);
       errorMessage.value = 'Error de conexión';
     }
   }
 
-  void register(String email, String password, String username, String fullName, String region) async {
+  void register(
+    String email,
+    String password,
+    String username,
+    String fullName,
+    String region,
+  ) async {
     try {
       _resetErrorCode();
-      final credentials = await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      await credentials.user!.updateDisplayName(username);
-      await store.collection('users').doc(credentials.user!.uid).set({
-        fullName: fullName,
-        region: region,
+      final credentials = await _auth.createUser(email, password);
+      await _auth.setUsername(credentials.user!, username);
+      await _store.set('users', credentials.user!.uid, {
+        'fullName': fullName,
+        'region': region,
       });
     } on FirebaseAuthException catch (e) {
+      print(e);
       switch (e.code) {
         case 'email-already-in-use':
           errorMessage.value = 'Correo ya registrado';
@@ -77,13 +87,14 @@ class AuthController {
         default:
           errorMessage.value = 'Error de conexión';
       }
-    } catch (_) {
+    } catch (e) {
+      print(e);
       errorMessage.value = 'Error de conexión';
     }
   }
 
   void logout() async {
-    await auth.signOut();
+    await _auth.logout();
   }
 
   void _resetErrorCode() {

@@ -49,7 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onLoginBtnClick() {
     if (_formKey.currentState!.validate()) {
-      Get.find<AuthController>().login(_data['email']!, _data['password']!);
+      Get.find<AuthController>().login(
+        _data['email']!,
+        _data['password']!,
+      );
     }
   }
 
