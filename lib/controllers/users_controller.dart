@@ -13,6 +13,7 @@ class UsersController {
   final currentStatus = Rx<AuthStatus>(AuthStatus.loading);
   final currentUser = Rx<UserData?>(null);
   final errorMessage = Rx<String?>(null);
+  final loading = Rx<bool>(false);
 
   UsersController({
     required AuthenticationService authenticationService,
@@ -50,6 +51,7 @@ class UsersController {
       );
       currentStatus.value = AuthStatus.loggedIn;
     }
+    loading.value = false;
   }
 
   void updateProfile(
@@ -60,6 +62,7 @@ class UsersController {
   ) async {
     final user = currentUser.value;
     if (user == null) return;
+    loading.value = true;
     final newUserData = UserData(
       uid: user.uid,
       email: user.email,
@@ -76,10 +79,12 @@ class UsersController {
       await _store.set('users', user.uid, newUserData.toFirestoreMap());
     } catch (_) {
       errorMessage.value = 'Error de conexión';
+      loading.value = false;
     }
   }
 
   void login(String email, String password) async {
+    loading.value = true;
     try {
       _resetErrorCode();
       await _auth.login(email, password);
@@ -96,8 +101,10 @@ class UsersController {
         default:
           errorMessage.value = 'Error de conexión';
       }
+      loading.value = false;
     } catch (e) {
       errorMessage.value = 'Error de conexión';
+      loading.value = false;
     }
   }
 
@@ -108,6 +115,7 @@ class UsersController {
     String fullName,
     String region,
   ) async {
+    loading.value = true;
     try {
       _resetErrorCode();
       final credentials = await _auth.createUser(email, password);
@@ -133,13 +141,16 @@ class UsersController {
         default:
           errorMessage.value = 'Error de conexión';
       }
+      loading.value = false;
     } catch (e) {
       errorMessage.value = 'Error de conexión';
+      loading.value = false;
     }
   }
 
   void logout() async {
     await _auth.logout();
+    loading.value = false;
   }
 
   void _resetErrorCode() {

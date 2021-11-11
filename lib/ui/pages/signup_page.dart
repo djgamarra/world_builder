@@ -25,7 +25,6 @@ class _SignupPageState extends State<SignupPage> {
   final _authController = Get.find<UsersController>();
   final _coreDataController = Get.find<CoreDataController>();
 
-  List<Region> _regions = [];
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
     'username': '',
@@ -36,12 +35,10 @@ class _SignupPageState extends State<SignupPage> {
   };
 
   _SignupPageState() {
-    _regions = _coreDataController.regions.value;
-    _data['region'] = _regions[0].code;
+    _data['region'] = _coreDataController.regions.value[0].code;
     _coreDataController.regions.listen((regions) {
       setState(() {
-        _regions = regions;
-        _data['region'] = _regions[0].code;
+        _data['region'] = _coreDataController.regions.value[0].code;
       });
     });
     _authController.errorMessage.listen((errorMessage) {
@@ -134,27 +131,29 @@ class _SignupPageState extends State<SignupPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        DropdownButton(
-                          // dropdownColor: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
-                          autofocus: true,
-                          elevation: 0,
-                          icon: const Icon(
-                            Icons.keyboard_arrow_down,
-                          ),
-                          value: _data['region'],
-                          items: _regions.map((Region region) {
-                            return DropdownMenuItem(
-                              value: region.code,
-                              child: Text(
-                                region.name,
-                                style: primaryFont.copyWith(
-                                  fontSize: 17,
+                        Obx(
+                          () => DropdownButton(
+                            borderRadius: BorderRadius.circular(10),
+                            autofocus: true,
+                            elevation: 0,
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                            ),
+                            value: _data['region'],
+                            items: _coreDataController.regions.value
+                                .map((Region region) {
+                              return DropdownMenuItem(
+                                value: region.code,
+                                child: Text(
+                                  region.name,
+                                  style: primaryFont.copyWith(
+                                    fontSize: 17,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: _onRegionChanged,
+                              );
+                            }).toList(),
+                            onChanged: _onRegionChanged,
+                          ),
                         ),
                       ],
                     ),
@@ -191,19 +190,25 @@ class _SignupPageState extends State<SignupPage> {
                       validator: passwordValidator,
                     ),
                     const SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomButton(
-                          text: 'INICIAR SESIÓN',
-                          onClick: _onLoginBtnClick,
-                        ),
-                        CustomButton(
-                          text: 'REGISTRARSE',
-                          onClick: _onSignupBtnClick,
-                          solid: true,
-                        ),
-                      ],
+                    Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomButton(
+                            text: 'INICIAR SESIÓN',
+                            onClick: _onLoginBtnClick,
+                            disabled: _authController.loading.value,
+                          ),
+                          CustomButton(
+                            text: _authController.loading.value
+                                ? 'CREANDO USUARIO...'
+                                : 'REGISTRARSE',
+                            onClick: _onSignupBtnClick,
+                            solid: true,
+                            disabled: _authController.loading.value,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 30),
                   ],

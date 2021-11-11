@@ -116,19 +116,25 @@ class _LoginPageState extends State<LoginPage> {
                     validator: passwordValidator,
                   ),
                   const SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomButton(
-                        text: 'INICIAR SESIÓN',
-                        onClick: _onLoginBtnClick,
-                        solid: true,
-                      ),
-                      CustomButton(
-                        text: 'REGISTRARSE',
-                        onClick: _onRegisterBtnClick,
-                      ),
-                    ],
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomButton(
+                          text: _authController.loading.value
+                              ? 'INICIANDO SESIÓN...'
+                              : 'INICIAR SESIÓN',
+                          onClick: _onLoginBtnClick,
+                          solid: true,
+                          disabled: _authController.loading.value,
+                        ),
+                        CustomButton(
+                          text: 'REGISTRARSE',
+                          onClick: _onRegisterBtnClick,
+                          disabled: _authController.loading.value,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 30),
                 ],

@@ -6,7 +6,7 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Color color, backgroundColor;
   final Function() onClick;
-  final bool solid, fullWidth;
+  final bool solid, fullWidth, disabled;
   final double fontSize, borderWidth;
 
   const CustomButton({
@@ -19,6 +19,7 @@ class CustomButton extends StatelessWidget {
     this.fullWidth = false,
     this.fontSize = 14,
     this.borderWidth = 1,
+    this.disabled = false,
   }) : super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class CustomButton extends StatelessWidget {
           width: borderWidth,
         ),
       ),
-      onPressed: onClick,
+      onPressed: disabled ? null : onClick,
       child: Text(
         "  $text  ",
         style: primaryFont.copyWith(
