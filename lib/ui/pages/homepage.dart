@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:world_builder/ui/screens/search_page.dart';
-import 'package:world_builder/ui/screens/clubs_page.dart';
-import 'package:world_builder/ui/screens/stories_page.dart';
-import 'package:world_builder/ui/screens/profile_page.dart';
+import 'package:world_builder/ui/pages/search_page.dart';
+import 'package:world_builder/ui/pages/clubs_page.dart';
+import 'package:world_builder/ui/pages/stories_page.dart';
+import 'package:world_builder/ui/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

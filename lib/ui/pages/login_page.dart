@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/ui/screens/homepage.dart';
-import 'package:world_builder/ui/screens/signup_page.dart';
+import 'package:world_builder/ui/pages/homepage.dart';
+import 'package:world_builder/ui/pages/signup_page.dart';
 
 import '../utils.dart';
 

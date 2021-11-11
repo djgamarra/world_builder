@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/models/region.dart';
-import 'package:world_builder/ui/screens/login_page.dart';
+import 'package:world_builder/ui/pages/login_page.dart';
 import 'package:world_builder/ui/utils.dart';
 
 import 'homepage.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/ui/screens/login_page.dart';
+import 'package:world_builder/ui/pages/login_page.dart';
 
 import 'homepage.dart';
 

@@ -5,7 +5,7 @@ import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/services/authentication_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
-import 'package:world_builder/ui/screens/splash_page.dart';
+import 'package:world_builder/ui/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
