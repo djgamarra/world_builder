@@ -6,6 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/ui/screens/login_screen.dart';
+import 'package:world_builder/ui/utils.dart';
+
+import 'homepage.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _authController = Get.find<AuthController>();
   final _coreDataController = Get.find<CoreDataController>();
 
   List<String> _regions = [];
@@ -36,6 +40,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _data['region'] = _regions[0];
       });
     });
+    _authController.errorMessage.listen((errorMessage) {
+      if (errorMessage != null) {
+        Get.snackbar('Error', errorMessage);
+      }
+    });
+    _authController.currentStatus.listen((authStatus) {
+      if (authStatus == AuthStatus.loggedIn) {
+        Get.snackbar('Correcto', 'Usuario creado exitosamente');
+        Get.off(() => const HomePage());
+      }
+    });
   }
 
   _onFieldChanged(String key) => (text) => setState(() {
@@ -44,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onSignupBtnClick() {
     if (_formKey.currentState!.validate()) {
-      Get.find<AuthController>().register(
+      _authController.register(
         _data['email']!,
         _data['password']!,
         _data['username']!,
@@ -122,6 +137,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 TextFormField(
                                   onChanged: _onFieldChanged('username'),
+                                  keyboardType: TextInputType.name,
+                                  validator: usernameValidator,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -150,6 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 TextFormField(
                                   onChanged: _onFieldChanged('fullName'),
+                                  keyboardType: TextInputType.name,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -178,6 +196,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 TextFormField(
                                   onChanged: _onFieldChanged('email'),
+                                  validator: emailValidator,
+                                  keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -207,6 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 TextFormField(
                                   onChanged: _onFieldChanged('password'),
                                   obscureText: true,
+                                  keyboardType: TextInputType.visiblePassword,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,

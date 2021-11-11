@@ -7,6 +7,8 @@ import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/screens/homepage.dart';
 import 'package:world_builder/ui/screens/register_screen.dart';
 
+import '../utils.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -34,29 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Get.off(() => const HomePage());
       }
     });
-  }
-
-  String? _emailValidator(String? email) {
-    if (email == null) {
-      return 'Escriba su correo';
-    }
-    final hasMatch = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-    ).hasMatch(email);
-    if (!hasMatch) {
-      return 'Correo electrónico inválido';
-    }
-    return null;
-  }
-
-  String? _passwordValidator(String? password) {
-    if (password == null) {
-      return 'Escriba su contraseña';
-    }
-    if (password.length < 6) {
-      return 'Contraseña demasiado corta';
-    }
-    return null;
   }
 
   _onFieldChanged(String key) => (text) => setState(() {
@@ -136,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextFormField(
                               keyboardType: TextInputType.emailAddress,
                               onChanged: _onFieldChanged('email'),
-                              validator: _emailValidator,
+                              validator: emailValidator,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -167,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
                               onChanged: _onFieldChanged('password'),
-                              validator: _passwordValidator,
+                              validator: passwordValidator,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
