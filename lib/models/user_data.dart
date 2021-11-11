@@ -33,13 +33,16 @@ class UserData {
         writerOf: data['writerOf'],
       );
 
-  Map<String, dynamic> toFirestoreMap() => {
-        'email': email,
+  Map<String, dynamic> toFirestoreMapPublic() => {
         'username': username,
-        'fullName': fullName,
         'region': region,
         'taste': taste,
         'interests': interests,
         'writerOf': writerOf,
+      };
+
+  Map<String, dynamic> toFirestoreMapPrivate() => {
+        'email': email,
+        'fullName': fullName,
       };
 }

@@ -32,13 +32,21 @@ class UsersController {
       currentUser.value = null;
       currentStatus.value = AuthStatus.loggedOut;
     } else {
-      Map<String, dynamic> data;
+      Map<String, dynamic> data = {};
       try {
-        data = (await _store.get('users', user.uid)).data() ?? {};
+        final storeData = await Future.wait([
+          _store.get('users_private', user.uid),
+          _store.get('users_public', user.uid),
+        ]);
+        data.addAll(storeData[0].data() ?? {});
+        data.addAll(storeData[1].data() ?? {});
       } catch (_) {
         data = {};
       }
-      currentUser.value = UserData.fromFirebase(user: user, data: data);
+      currentUser.value = UserData.fromFirebase(
+        user: user,
+        data: data,
+      );
       currentStatus.value = AuthStatus.loggedIn;
     }
     loading.value = false;
@@ -66,7 +74,18 @@ class UsersController {
     );
     currentUser.value = newUserData;
     try {
-      await _store.set('users', user.uid, newUserData.toFirestoreMap());
+      await Future.wait([
+        _store.set(
+          'users_private',
+          user.uid,
+          newUserData.toFirestoreMapPrivate(),
+        ),
+        _store.set(
+          'users_public',
+          user.uid,
+          newUserData.toFirestoreMapPublic(),
+        ),
+      ]);
     } catch (_) {
       errorMessage.value = 'Error de conexión';
     }
@@ -121,7 +140,18 @@ class UsersController {
         interests: '',
         writerOf: '',
       );
-      await _store.set('users', credentials.user!.uid, user.toFirestoreMap());
+      await Future.wait([
+        _store.set(
+          'users_private',
+          credentials.user!.uid,
+          user.toFirestoreMapPrivate(),
+        ),
+        _store.set(
+          'users_public',
+          credentials.user!.uid,
+          user.toFirestoreMapPublic(),
+        ),
+      ]);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':

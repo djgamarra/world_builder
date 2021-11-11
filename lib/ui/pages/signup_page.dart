@@ -75,7 +75,10 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  void _onLoginBtnClick() => Get.off(() => const LoginPage());
+  void _onLoginBtnClick() {
+    Get.focusScope!.unfocus();
+    Get.off(() => const LoginPage());
+  }
 
   @override
   Widget build(BuildContext context) {
