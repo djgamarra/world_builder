@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get.dart';
 import 'package:world_builder/services/authentication_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
@@ -21,7 +21,7 @@ class AuthController {
     _store = firestoreService;
   }
 
-  void init() {
+  Future<void> init() async {
     _auth.subscribeToChanges((user) {
       currentUser.value = user;
       if (user == null) {

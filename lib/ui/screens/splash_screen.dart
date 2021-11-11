@@ -18,9 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _onLoginBtnClick() {
     if (_authController.currentStatus.value == AuthStatus.loggedIn) {
-      Get.off(const HomePage());
+      Get.off(() => const HomePage());
     } else {
-      Get.off(const LoginScreen());
+      Get.off(() => const LoginScreen());
     }
   }
 

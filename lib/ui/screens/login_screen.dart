@@ -15,11 +15,26 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _authController = Get.find<AuthController>();
+
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
     'email': '',
     'password': '',
   };
+
+  _LoginScreenState() {
+    _authController.errorMessage.listen((errorMessage) {
+      if (errorMessage != null) {
+        Get.snackbar('Error', errorMessage);
+      }
+    });
+    _authController.currentStatus.listen((authStatus) {
+      if (authStatus == AuthStatus.loggedIn) {
+        Get.off(() => const HomePage());
+      }
+    });
+  }
 
   String? _emailValidator(String? email) {
     if (email == null) {
@@ -58,24 +73,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onRegisterBtnClick() {
-    Get.off(const RegisterScreen());
+    Get.off(() => const RegisterScreen());
   }
 
   @override
   Widget build(BuildContext context) {
     const String logoUrl = 'assets/logo_login.svg';
     final mediaQuery = MediaQuery.of(context);
-    final authController = Get.find<AuthController>();
-    authController.errorMessage.listen((errorMessage) {
-      if (errorMessage != null) {
-        Get.snackbar('Error', errorMessage);
-      }
-    });
-    authController.currentStatus.listen((authStatus) {
-      if (authStatus == AuthStatus.loggedIn) {
-        Get.off(const HomePage());
-      }
-    });
     return Scaffold(
       body: Form(
         key: _formKey,

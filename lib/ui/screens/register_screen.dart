@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/ui/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -14,6 +15,9 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _coreDataController = Get.find<CoreDataController>();
+
+  List<String> _regions = [];
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
     'username': '',
@@ -22,6 +26,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'password': '',
     'region': '',
   };
+
+  _RegisterScreenState() {
+    _regions = _coreDataController.regions.value;
+    _data['region'] = _regions[0];
+    _coreDataController.regions.listen((regions) {
+      setState(() {
+        _regions = regions;
+        _data['region'] = _regions[0];
+      });
+    });
+  }
 
   _onFieldChanged(String key) => (text) => setState(() {
         _data[key] = text ?? '';
@@ -40,12 +55,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _onLoginBtnClick() {
-    Get.off(const LoginScreen());
+    Get.off(() => const LoginScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    var regions = ['Region1', 'Region2', 'Region3']; // TO-DO
     final mediaQuery = Get.mediaQuery;
 
     return Scaffold(
@@ -234,10 +248,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           Icons.keyboard_arrow_down,
                                         ),
                                         value: _data['region'],
-                                        items: regions.map((String regions) {
+                                        items: _regions.map((String region) {
                                           return DropdownMenuItem(
-                                            value: regions,
-                                            child: Text(regions),
+                                            value: region,
+                                            child: Text(region),
                                           );
                                         }).toList(),
                                         onChanged: _onFieldChanged('region'),
