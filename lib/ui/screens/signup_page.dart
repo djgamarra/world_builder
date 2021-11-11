@@ -6,19 +6,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/models/region.dart';
-import 'package:world_builder/ui/screens/login_screen.dart';
+import 'package:world_builder/ui/screens/login_page.dart';
 import 'package:world_builder/ui/utils.dart';
 
 import 'homepage.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SignupPageState extends State<SignupPage> {
   final _authController = Get.find<AuthController>();
   final _coreDataController = Get.find<CoreDataController>();
 
@@ -32,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'region': '',
   };
 
-  _RegisterScreenState() {
+  _SignupPageState() {
     _regions = _coreDataController.regions.value;
     _data['region'] = _regions[0].code;
     _coreDataController.regions.listen((regions) {
@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _onLoginBtnClick() {
-    Get.off(() => const LoginScreen());
+    Get.off(() => const LoginPage());
   }
 
   @override

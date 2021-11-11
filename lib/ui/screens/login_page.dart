@@ -5,18 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/screens/homepage.dart';
-import 'package:world_builder/ui/screens/register_screen.dart';
+import 'package:world_builder/ui/screens/signup_page.dart';
 
 import '../utils.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final _authController = Get.find<AuthController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     'password': '',
   };
 
-  _LoginScreenState() {
+  _LoginPageState() {
     _authController.errorMessage.listen((errorMessage) {
       if (errorMessage != null) {
         Get.snackbar('Error', errorMessage);
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onRegisterBtnClick() {
-    Get.off(() => const RegisterScreen());
+    Get.off(() => const SignupPage());
   }
 
   @override

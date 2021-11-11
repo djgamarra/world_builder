@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/ui/screens/login_screen.dart';
+import 'package:world_builder/ui/screens/login_page.dart';
 
 import 'homepage.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashPage extends StatefulWidget {
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashPageState extends State<SplashPage> {
   final _authController = Get.find<AuthController>();
 
   void _onLoginBtnClick() {
     if (_authController.currentStatus.value == AuthStatus.loggedIn) {
       Get.off(() => const HomePage());
     } else {
-      Get.off(() => const LoginScreen());
+      Get.off(() => const LoginPage());
     }
   }
 

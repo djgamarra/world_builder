@@ -1,11 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:world_builder/ui/screens/busqueda.dart';
-import 'package:world_builder/ui/screens/clubes.dart';
-import 'package:world_builder/ui/screens/historias.dart';
-import 'package:world_builder/ui/screens/login_screen.dart';
-import 'package:world_builder/ui/screens/perfil.dart';
+import 'package:world_builder/ui/screens/search_page.dart';
+import 'package:world_builder/ui/screens/clubs_page.dart';
+import 'package:world_builder/ui/screens/stories_page.dart';
+import 'package:world_builder/ui/screens/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,10 +18,10 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HistoriasPage(),
-    ClubesPage(),
-    BusquedaPage(),
-    PerfilPage()
+    StoriesPage(),
+    ClubsPage(),
+    SearchPage(),
+    ProfilePage()
   ];
 
   void _onItemTapped(int index) {
