@@ -1,5 +1,5 @@
 String? emailValidator(String? email) {
-  if (email == null) {
+  if (email == null || email.isEmpty) {
     return 'Escriba su correo';
   }
   final hasMatch = RegExp(

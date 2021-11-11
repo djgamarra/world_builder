@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
+import 'package:world_builder/ui/widgets/custom_button.dart';
 
-import 'homepage.dart';
+import 'home_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -67,7 +69,7 @@ class _SplashPageState extends State<SplashPage> {
                 child: Text(
                   "Lee, crea y comparte historias, ¿qué estás esperando para unirte a nuestra comunidad?",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(
+                  style: primaryFont.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.normal,
                   ),
@@ -76,18 +78,25 @@ class _SplashPageState extends State<SplashPage> {
               const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 26),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 51),
-                    primary: Colors.white,
-                    elevation: 0,
-                  ),
-                  onPressed: _onLoginBtnClick,
-                  child: Text(
-                    "INGRESAR",
-                    style: GoogleFonts.play(fontSize: 18),
-                  ),
+                child: CustomButton(
+                  text: 'INGRESAR',
+                  fullWidth: true,
+                  onClick: _onLoginBtnClick,
+                  fontSize: 16,
+                  borderWidth: 1.5,
                 ),
+                // child: ElevatedButton(
+                //   style: ElevatedButton.styleFrom(
+                //     minimumSize: const Size(double.infinity, 51),
+                //     primary: Colors.white,
+                //     elevation: 0,
+                //   ),
+                //   onPressed: _onLoginBtnClick,
+                //   child: Text(
+                //     "INGRESAR",
+                //     style: GoogleFonts.play(fontSize: 18),
+                //   ),
+                // ),
               ),
               const SizedBox(height: 26),
             ],
