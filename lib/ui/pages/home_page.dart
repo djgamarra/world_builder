@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/search_page.dart';
 import 'package:world_builder/ui/pages/clubs_page.dart';
 import 'package:world_builder/ui/pages/stories_page.dart';
@@ -14,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
@@ -29,49 +29,42 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      
-       bottomNavigationBar: 
-        Theme(
-         data:Theme.of(context).copyWith(
-        canvasColor: const Color(0xFFE1F4FF),
-        ),
-        child: BottomNavigationBar(
+      body: _widgetOptions[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("assets/Historias.png")),
+            icon: Icon(Icons.history_edu),
             label: 'Historias',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("assets/grupo-de-chat.png")),
+            icon: Icon(Icons.group),
             label: 'Clubes',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("assets/vidrio-de-aumento.png")),
+            icon: Icon(Icons.search),
             label: 'Buscar',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("assets/usuario-de-perfil.png")),
+            icon: Icon(Icons.person),
             label: 'Perfil',
           ),
         ],
         type: BottomNavigationBarType.fixed,
         elevation: 20,
-        selectedIconTheme: const IconThemeData(size: 40, color: Colors.black),
-        unselectedIconTheme: const IconThemeData(size:20, color: Colors.black),
-        unselectedLabelStyle: GoogleFonts.play(fontSize: 14),
-        showSelectedLabels: false,
-        showUnselectedLabels: true,
+        selectedLabelStyle: primaryFont.copyWith(fontSize: 14),
+        unselectedLabelStyle: primaryFont.copyWith(fontSize: 14),
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-      ),)
-       
+        selectedItemColor: defaultBorderColor,
+        unselectedItemColor: defaultBorderColor.withOpacity(.8),
+        backgroundColor: defaultBackgroundColor,
+      ),
     );
   }
 }
