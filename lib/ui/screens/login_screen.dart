@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/ui/screens/homepage.dart';
 import 'package:world_builder/ui/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -56,27 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Route _createRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const RegisterScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        final tween = Tween(begin: begin, end: end);
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: curve,
-        );
-
-        return SlideTransition(
-          position: tween.animate(curvedAnimation),
-          child: child,
-        );
-      },
-    );
+  void _onRegisterBtnClick() {
+    Get.off(const RegisterScreen());
   }
 
   @override
@@ -87,6 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
     authController.errorMessage.listen((errorMessage) {
       if (errorMessage != null) {
         Get.snackbar('Error', errorMessage);
+      }
+    });
+    authController.currentStatus.listen((authStatus) {
+      if (authStatus == AuthStatus.loggedIn) {
+        Get.off(const HomePage());
       }
     });
     return Scaffold(
@@ -204,9 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(_createRoute());
-                          },
+                          onPressed: _onRegisterBtnClick,
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
                             primary: Colors.white,

@@ -9,6 +9,13 @@ import 'package:world_builder/ui/screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final authService = Get.put(AuthenticationService());
+  final firestoreService = Get.put(FirestoreService());
+  final authController = Get.put(AuthController(
+    authenticationService: authService,
+    firestoreService: firestoreService,
+  ));
+  authController.init();
   runApp(const MyApp());
 }
 
@@ -17,13 +24,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Get.put(AuthenticationService());
-    final firestoreService = Get.put(FirestoreService());
-    final authController = Get.put(AuthController(
-      authenticationService: authService,
-      firestoreService: firestoreService,
-    ));
-    authController.init();
     return GetMaterialApp(
       title: 'World Builder',
       debugShowCheckedModeBanner: false,

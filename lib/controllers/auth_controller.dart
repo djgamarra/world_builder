@@ -21,14 +21,13 @@ class AuthController {
     _store = firestoreService;
   }
 
-  void init() async {
+  void init() {
     _auth.subscribeToChanges((user) {
+      currentUser.value = user;
       if (user == null) {
         currentStatus.value = AuthStatus.loggedOut;
       } else {
         currentStatus.value = AuthStatus.loggedIn;
-        currentUser.value = user;
-        print(currentUser.value);
       }
     });
   }
@@ -38,7 +37,6 @@ class AuthController {
       _resetErrorCode();
       await _auth.login(email, password);
     } on FirebaseAuthException catch (e) {
-      print(e);
       switch (e.code) {
         case 'invalid-email':
         case 'user-not-found':
@@ -52,7 +50,6 @@ class AuthController {
           errorMessage.value = 'Error de conexión';
       }
     } catch (e) {
-      print(e);
       errorMessage.value = 'Error de conexión';
     }
   }
@@ -73,7 +70,6 @@ class AuthController {
         'region': region,
       });
     } on FirebaseAuthException catch (e) {
-      print(e);
       switch (e.code) {
         case 'email-already-in-use':
           errorMessage.value = 'Correo ya registrado';
@@ -88,7 +84,6 @@ class AuthController {
           errorMessage.value = 'Error de conexión';
       }
     } catch (e) {
-      print(e);
       errorMessage.value = 'Error de conexión';
     }
   }
