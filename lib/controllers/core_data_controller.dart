@@ -13,10 +13,15 @@ class CoreDataController {
   }
 
   Future<void> init() async {
-    final query = await _store.getAll('regions');
-    final _regions =
-        query.docs.map<String>((snapshot) => snapshot.data()['name']).toList();
-    _regions.sort();
-    regions.value = _regions;
+    try {
+      final _regions = (await _store.getAll('regions'))
+          .docs
+          .map<String>((snapshot) => snapshot.data()['name'])
+          .toList();
+      _regions.sort();
+      regions.value = _regions;
+    } catch (_) {
+      regions.value = ['GLOBAL'];
+    }
   }
 }

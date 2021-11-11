@@ -11,6 +11,7 @@ class AuthController {
 
   final currentStatus = Rx<AuthStatus>(AuthStatus.loading);
   final currentUser = Rx<User?>(null);
+  final currentUserData = Rx<Map<String, dynamic>?>(null);
   final errorMessage = Rx<String?>(null);
 
   AuthController({
@@ -22,11 +23,17 @@ class AuthController {
   }
 
   Future<void> init() async {
-    _auth.subscribeToChanges((user) {
+    _auth.subscribeToChanges((user) async {
       currentUser.value = user;
       if (user == null) {
+        currentUserData.value = null;
         currentStatus.value = AuthStatus.loggedOut;
       } else {
+        try {
+          currentUserData.value = (await _store.get('users', user.uid)).data();
+        } catch (_) {
+          currentUserData.value = {};
+        }
         currentStatus.value = AuthStatus.loggedIn;
       }
     });
