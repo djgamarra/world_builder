@@ -1,7 +1,11 @@
 import 'dart:ui';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:world_builder/services/blocs/auth/auth_bloc.dart';
 import 'package:world_builder/ui/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -36,6 +40,27 @@ Route _createRoute() {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String _email = '', _password = '';
+
+  void _onEmailChanged(email) {
+    setState(() {
+      _email = email;
+    });
+  }
+
+  void _onPasswordChanged(password) {
+    setState(() {
+      _password = password;
+    });
+  }
+
+  void _onLoginBtnClick() {
+    Get.find<AuthBloc>().add(LoginEvent(
+      email: _email,
+      password: _password,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     const String logoUrl = 'assets/logo_login.svg';
@@ -52,112 +77,125 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         child: Container(
-            height: mediaQuery.size.height * .7,
-            width: mediaQuery.size.width,
-            decoration: const BoxDecoration(
-              color: Color(0xAACCDDE7),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+          height: mediaQuery.size.height * .7,
+          width: mediaQuery.size.width,
+          decoration: const BoxDecoration(
+            color: Color(0xAACCDDE7),
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15),
+              topLeft: Radius.circular(15),
             ),
-            // ignore: sized_box_for_whitespace
-            child: Container(
-              width: mediaQuery.size.width * .85,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    SvgPicture.asset(logoUrl,
-                        semanticsLabel: 'World Builder Logo',
-                        fit: BoxFit.scaleDown),
-                    // ignore: sized_box_for_whitespace
-                    Container(
-                        width: mediaQuery.size.width * .85,
-                        height: mediaQuery.size.height * .5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Usuario',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                                TextFormField(
-                                    decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                )),
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Contraseña',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                                TextFormField(
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          style: BorderStyle.none,
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    )),
-                              ],
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  primary: const Color(0xFF92D8FF),
-                                  fixedSize:
-                                      Size(mediaQuery.size.width * 0.4, 50)),
+          ),
+          // ignore: sized_box_for_whitespace
+          child: Container(
+            width: mediaQuery.size.width * .85,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SvgPicture.asset(
+                  logoUrl,
+                  semanticsLabel: 'World Builder Logo',
+                  fit: BoxFit.scaleDown,
+                ),
+                // ignore: sized_box_for_whitespace
+                Container(
+                  width: mediaQuery.size.width * .85,
+                  height: mediaQuery.size.height * .5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                "LOGIN",
-                                style: GoogleFonts.play(fontSize: 18),
+                                'Correo electrónico',
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(_createRoute());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  primary: Colors.white,
-                                  fixedSize:
-                                      Size(mediaQuery.size.width * 0.4, 50)),
+                          ),
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: _onEmailChanged,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                "REGISTRO",
-                                style: GoogleFonts.play(fontSize: 18),
+                                'Contraseña',
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
-                          ],
-                        ))
-                  ]),
-            )),
+                          ),
+                          TextFormField(
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: true,
+                            onChanged: _onPasswordChanged,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: _onLoginBtnClick,
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: const Color(0xFF92D8FF),
+                          fixedSize: Size(mediaQuery.size.width * 0.4, 50),
+                        ),
+                        child: Text(
+                          "LOGIN",
+                          style: GoogleFonts.play(fontSize: 18),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(_createRoute());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: Colors.white,
+                          fixedSize: Size(mediaQuery.size.width * 0.4, 50),
+                        ),
+                        child: Text(
+                          "REGISTRO",
+                          style: GoogleFonts.play(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

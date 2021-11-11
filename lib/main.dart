@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/services/blocs/auth/auth_bloc.dart';
 import 'package:world_builder/ui/screens/splash_screen.dart';
 
 void main() {
@@ -10,10 +12,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     Firebase.initializeApp();
+    Get.put<AuthBloc>(AuthBloc());
     return GetMaterialApp(
       title: 'World Builder',
       debugShowCheckedModeBanner: false,

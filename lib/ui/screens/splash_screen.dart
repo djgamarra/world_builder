@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/ui/screens/login_screen.dart';
 
@@ -9,30 +10,28 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        const LoginScreen(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      final tween = Tween(begin: begin, end: end);
-      final curvedAnimation = CurvedAnimation(
-        parent: animation,
-        curve: curve,
-      );
-
-      return SlideTransition(
-        position: tween.animate(curvedAnimation),
-        child: child,
-      );
-    },
-  );
-}
-
 class _SplashScreenState extends State<SplashScreen> {
+  Route _createRoute() => PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+      const LoginScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        final tween = Tween(begin: begin, end: end);
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: curve,
+        );
+
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      },
+    );
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
