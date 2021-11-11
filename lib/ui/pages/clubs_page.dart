@@ -14,6 +14,11 @@ class _ClubsPageState extends State<ClubsPage> {
     final mediaQuery = MediaQuery.of(context);
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {},
+        backgroundColor: Color(0xFF9BDBFF),
+      ),
       body: Center(
         child: Scaffold(
           body:
