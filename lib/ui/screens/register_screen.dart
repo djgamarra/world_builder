@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/ui/screens/homepage.dart';
+import 'package:world_builder/ui/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -11,6 +13,60 @@ class RegisterScreen extends StatefulWidget {
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
+
+Route _createRouteLogIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const LoginScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      final tween = Tween(begin: begin, end: end);
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: curve,
+      );
+
+      return SlideTransition(
+        position: tween.animate(curvedAnimation),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _createRouteTwo() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const HomePage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      final tween = Tween(begin: begin, end: end);
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: curve,
+      );
+
+      return SlideTransition(
+        position: tween.animate(curvedAnimation),
+        child: child,
+      );
+    },
+  );
+}
+
+// Text controllers
+final name = TextEditingController();
+final username = TextEditingController();
+final email = TextEditingController();
+final password = TextEditingController();
+final passwordver = TextEditingController();
+
+bool _validate = false;
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -42,9 +98,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     String dropdownvalue = 'Region1';
     var regions = ['Region1', 'Region2', 'Region3'];
-
     const String logoUrl = 'assets/logo_login.svg';
     final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -104,8 +160,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
-                                  onChanged: _onFieldChanged('username'),
+                                  controller: username,
                                   decoration: InputDecoration(
+                                    errorText: _validate
+                                        ? "Debe ingresar un valor válido."
+                                        : null,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -132,8 +191,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
-                                  onChanged: _onFieldChanged('fullName'),
+                                  controller: name,
+                                  obscureText: false,
                                   decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    errorText: _validate
+                                        ? "Debe ingresar un valor válido."
+                                        : null,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -141,8 +206,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         style: BorderStyle.none,
                                       ),
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.white,
                                   ),
                                 ),
                               ],
@@ -160,8 +223,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
-                                  onChanged: _onFieldChanged('email'),
+                                  controller: email,
                                   decoration: InputDecoration(
+                                    errorText: _validate
+                                        ? "Debe ingresar un valor válido."
+                                        : null,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -188,9 +254,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
-                                  onChanged: _onFieldChanged('password'),
+                                  controller: password,
                                   obscureText: true,
                                   decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    errorText: _validate
+                                        ? "Debe ingresar un valor válido."
+                                        : null,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                        width: 0,
+                                        style: BorderStyle.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TextFormField(
+                                  controller: passwordver,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    errorText: _validate
+                                        ? "Debe ingresar un valor válido."
+                                        : null,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -256,14 +343,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           ElevatedButton(
-                            onPressed: _onSignupBtnClick,
+                            onPressed: () => {
+                              if (username.text.isEmpty ||
+                                  name.text.isEmpty ||
+                                  email.text.isEmpty ||
+                                  password.text.isEmpty ||
+                                  passwordver.text.isEmpty)
+                                {
+                                  _validate = true,
+                                  Navigator.of(context)
+                                      .push(_createRouteLogIn())
+                                }
+                              else
+                                {_validate = false},
+                            },
                             style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              primary: const Color(0xFF92D8FF),
-                              fixedSize: Size(mediaQuery.size.width * 0.4, 50),
-                            ),
+                                elevation: 0,
+                                primary: const Color(0xFF92D8FF),
+                                fixedSize:
+                                    Size(mediaQuery.size.width * 0.4, 50)),
                             child: Text(
                               "REGISTRARSE",
+                              style: GoogleFonts.play(fontSize: 18),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(_createRouteTwo());
+                            },
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                primary: Colors.white,
+                                fixedSize:
+                                    Size(mediaQuery.size.width * 0.4, 50)),
+                            child: Text(
+                              "LOGIN",
                               style: GoogleFonts.play(fontSize: 18),
                             ),
                           ),
