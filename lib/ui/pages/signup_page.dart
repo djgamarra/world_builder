@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/users_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/models/region.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
@@ -19,7 +19,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _authController = Get.find<AuthController>();
+  final _authController = Get.find<UsersController>();
   final _coreDataController = Get.find<CoreDataController>();
 
   List<Region> _regions = [];

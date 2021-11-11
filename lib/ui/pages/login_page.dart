@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/users_controller.dart';
 import 'package:world_builder/ui/pages/homepage.dart';
 import 'package:world_builder/ui/pages/signup_page.dart';
 
@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _authController = Get.find<AuthController>();
+  final _authController = Get.find<UsersController>();
 
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onLoginBtnClick() {
     if (_formKey.currentState!.validate()) {
-      Get.find<AuthController>().login(
+      Get.find<UsersController>().login(
         _data['email']!,
         _data['password']!,
       );

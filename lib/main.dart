@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/users_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/services/authentication_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
@@ -12,7 +12,7 @@ void main() async {
   await Firebase.initializeApp();
   final authService = Get.put(AuthenticationService());
   final firestoreService = Get.put(FirestoreService());
-  final authController = Get.put(AuthController(
+  final authController = Get.put(UsersController(
     authenticationService: authService,
     firestoreService: firestoreService,
   ));

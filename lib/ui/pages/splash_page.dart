@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/users_controller.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
 
 import 'homepage.dart';
@@ -14,7 +14,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final _authController = Get.find<AuthController>();
+  final _authController = Get.find<UsersController>();
 
   void _onLoginBtnClick() {
     if (_authController.currentStatus.value == AuthStatus.loggedIn) {

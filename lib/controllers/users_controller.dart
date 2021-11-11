@@ -6,7 +6,7 @@ import 'package:world_builder/services/firestore_service.dart';
 
 enum AuthStatus { withError, loading, loggedIn, loggedOut }
 
-class AuthController {
+class UsersController {
   late final AuthenticationService _auth;
   late final FirestoreService _store;
 
@@ -14,7 +14,7 @@ class AuthController {
   final currentUser = Rx<UserData?>(null);
   final errorMessage = Rx<String?>(null);
 
-  AuthController({
+  UsersController({
     required AuthenticationService authenticationService,
     required FirestoreService firestoreService,
   }) {
@@ -43,8 +43,39 @@ class AuthController {
         username: user.displayName ?? '',
         fullName: data['fullName'] ?? '',
         region: data['region'] ?? '',
+        user: user,
+        interests: data['interests'] ?? '',
+        taste: data['taste'] ?? '',
+        writerOf: data['writerOf'] ?? '',
       );
       currentStatus.value = AuthStatus.loggedIn;
+    }
+  }
+
+  void updateProfile(
+    String fullName,
+    String taste,
+    String interests,
+    String writerOf,
+  ) async {
+    final user = currentUser.value;
+    if (user == null) return;
+    final newUserData = UserData(
+      uid: user.uid,
+      email: user.email,
+      username: user.username,
+      fullName: fullName,
+      region: user.region,
+      user: user.user,
+      taste: taste,
+      interests: interests,
+      writerOf: writerOf,
+    );
+    currentUser.value = newUserData;
+    try {
+      await _store.set('users', user.uid, newUserData.toFirestoreMap());
+    } catch (_) {
+      errorMessage.value = 'Error de conexión';
     }
   }
 
@@ -84,6 +115,9 @@ class AuthController {
       await _store.set('users', credentials.user!.uid, {
         'fullName': fullName,
         'region': region,
+        'taste': '',
+        'interests': '',
+        'writerOf': '',
       });
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
