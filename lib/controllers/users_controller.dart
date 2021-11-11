@@ -38,17 +38,7 @@ class UsersController {
       } catch (_) {
         data = {};
       }
-      currentUser.value = UserData(
-        uid: user.uid,
-        email: user.email!,
-        username: user.displayName ?? '',
-        fullName: data['fullName'] ?? '',
-        region: data['region'] ?? '',
-        user: user,
-        interests: data['interests'] ?? '',
-        taste: data['taste'] ?? '',
-        writerOf: data['writerOf'] ?? '',
-      );
+      currentUser.value = UserData.fromFirebase(user: user, data: data);
       currentStatus.value = AuthStatus.loggedIn;
     }
     loading.value = false;
@@ -119,14 +109,19 @@ class UsersController {
     try {
       _resetErrorCode();
       final credentials = await _auth.createUser(email, password);
-      await _auth.setUsername(credentials.user!, username);
-      await _store.set('users', credentials.user!.uid, {
-        'fullName': fullName,
-        'region': region,
-        'taste': '',
-        'interests': '',
-        'writerOf': '',
-      });
+      final authUser = credentials.user!;
+      final user = UserData(
+        uid: authUser.uid,
+        email: authUser.email!,
+        username: username,
+        fullName: fullName,
+        region: region,
+        user: authUser,
+        taste: '',
+        interests: '',
+        writerOf: '',
+      );
+      await _store.set('users', credentials.user!.uid, user.toFirestoreMap());
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':

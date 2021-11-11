@@ -16,10 +16,10 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final _authController = Get.find<UsersController>();
+  final _usersController = Get.find<UsersController>();
 
   void _onLoginBtnClick() {
-    if (_authController.currentStatus.value == AuthStatus.loggedIn) {
+    if (_usersController.currentStatus.value == AuthStatus.loggedIn) {
       Get.off(() => const HomePage());
     } else {
       Get.off(() => const LoginPage());
@@ -41,7 +41,6 @@ class _SplashPageState extends State<SplashPage> {
           ),
         ),
         child: Container(
-          // alignment: Alignment.bottomCenter,
           width: mediaQuery.size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -85,18 +84,6 @@ class _SplashPageState extends State<SplashPage> {
                   fontSize: 16,
                   borderWidth: 1.5,
                 ),
-                // child: ElevatedButton(
-                //   style: ElevatedButton.styleFrom(
-                //     minimumSize: const Size(double.infinity, 51),
-                //     primary: Colors.white,
-                //     elevation: 0,
-                //   ),
-                //   onPressed: _onLoginBtnClick,
-                //   child: Text(
-                //     "INGRESAR",
-                //     style: GoogleFonts.play(fontSize: 18),
-                //   ),
-                // ),
               ),
               const SizedBox(height: 26),
             ],

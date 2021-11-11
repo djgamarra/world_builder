@@ -12,14 +12,14 @@ void main() async {
   await Firebase.initializeApp();
   final authService = Get.put(AuthenticationService());
   final firestoreService = Get.put(FirestoreService());
-  final authController = Get.put(UsersController(
+  final usersController = Get.put(UsersController(
     authenticationService: authService,
     firestoreService: firestoreService,
   ));
   final coreDataController = Get.put(CoreDataController(
     firestoreService: firestoreService,
   ));
-  await authController.init();
+  await usersController.init();
   await coreDataController.init();
   runApp(const MyApp());
 }

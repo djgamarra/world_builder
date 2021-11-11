@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
+import 'package:world_builder/ui/widgets/custom_button.dart';
+import 'package:world_builder/ui/widgets/custom_text_field.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -12,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _authController = Get.find<UsersController>();
+  final _usersController = Get.find<UsersController>();
   final Map<String, String> _data = {
     'fullName': '',
     'taste': '',
@@ -21,33 +25,35 @@ class _ProfilePageState extends State<ProfilePage> {
   };
 
   _ProfilePageState() {
-    _authController.currentStatus.listen((status) {
+    _usersController.currentStatus.listen((status) {
       if (status == AuthStatus.loggedOut) {
         Get.off(() => const LoginPage());
       }
     });
-    _authController.errorMessage.listen((errorMessage) {
+    _usersController.errorMessage.listen((errorMessage) {
       if (errorMessage != null) {
         Get.snackbar('Error', errorMessage);
       }
     });
-    final currentUser = _authController.currentUser.value!;
+    final currentUser = _usersController.currentUser.value!;
     _data['fullName'] = currentUser.fullName;
     _data['taste'] = currentUser.taste;
     _data['interests'] = currentUser.interests;
     _data['writerOf'] = currentUser.writerOf;
   }
 
-  _onFieldChanged(String key) => (text) => setState(() {
-        _data[key] = text ?? '';
+  void _onFieldChanged(String field, String value) => setState(() {
+        _data[field] = value;
       });
 
   void _onLogoutBtnClick() {
-    _authController.logout();
+    Get.focusScope!.unfocus();
+    _usersController.logout();
   }
 
   void _onSaveBtnClick() {
-    _authController.updateProfile(
+    Get.focusScope!.unfocus();
+    _usersController.updateProfile(
       _data['fullName']!,
       _data['taste']!,
       _data['interests']!,
@@ -61,201 +67,88 @@ class _ProfilePageState extends State<ProfilePage> {
     final mediaQuery = MediaQuery.of(context);
 
     return Scaffold(
-      body: Center(
-        child: Scaffold(
-          body: SingleChildScrollView(
-            // ignore: sized_box_for_whitespace
-            child: SafeArea(
-              child: Container(
-                height: mediaQuery.size.height - 100,
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            'Perfil',
-                            style: GoogleFonts.play(fontSize: 30),
-                          ),
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onPrimary: Colors.black,
-                              elevation: 0,
-                            ),
-                            label: const Text(""),
-                            onPressed: _onLogoutBtnClick,
-                            icon: const ImageIcon(
-                              AssetImage("assets/logout.png"),
-                            ),
-                          ),
-                        ],
-                      ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Mi cuenta',
+                      style: primaryFont.copyWith(fontSize: 30),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          const ImageIcon(
-                            AssetImage("assets/Ellipse.png"),
-                            size: 70,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
-                            child: Text(
-                              'John Doe',
-                              style: GoogleFonts.play(fontSize: 25),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Nombre Real',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _data['fullName'],
-                                onChanged: _onFieldChanged('fullName'),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Gustos Literarios',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _data['taste'],
-                                onChanged: _onFieldChanged('taste'),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Intereses',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _data['interests'],
-                                onChanged: _onFieldChanged('interests'),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Tipo de literatura que escribo',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _data['writerOf'],
-                                onChanged: _onFieldChanged('writerOf'),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: ElevatedButton(
-                              onPressed: _onSaveBtnClick,
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                primary: const Color(0xFF92D8FF),
-                                fixedSize:
-                                    Size(mediaQuery.size.width * 0.4, 50),
-                              ),
-                              child: Text(
-                                "GUARDAR",
-                                style: GoogleFonts.play(fontSize: 18),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    IconButton(
+                      tooltip: 'Cerrar sesión',
+                      onPressed: _onLogoutBtnClick,
+                      icon: const Icon(Icons.logout),
+                      color: defaultBorderColor,
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 30),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child: Image.network(
+                    'https://cdni.rt.com/actualidad/public_images/2021.04/article/6069eac8e9ff71083922df47.jpg',
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "@${_usersController.currentUser.value!.username}",
+                  style: primaryFont.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  initialValue: _data['fullName']!,
+                  field: 'fullName',
+                  label: 'Nombre real',
+                  onChanged: _onFieldChanged,
+                  type: TextInputType.name,
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  initialValue: _data['taste']!,
+                  field: 'taste',
+                  label: 'Gustos literarios',
+                  onChanged: _onFieldChanged,
+                  type: TextInputType.name,
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  initialValue: _data['interests']!,
+                  field: 'interests',
+                  label: 'Intereses',
+                  onChanged: _onFieldChanged,
+                  type: TextInputType.name,
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  initialValue: _data['writerOf']!,
+                  field: 'writerOf',
+                  label: 'Tipo de literatura que escribo',
+                  onChanged: _onFieldChanged,
+                  type: TextInputType.name,
+                ),
+                const SizedBox(height: 40),
+                CustomButton(
+                  text: 'GUARDAR',
+                  onClick: _onSaveBtnClick,
+                  disabled: _usersController.loading.value,
+                  solid: true,
+                  fullWidth: true,
+                ),
+                const SizedBox(height: 30),
+              ],
             ),
           ),
         ),

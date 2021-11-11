@@ -17,11 +17,29 @@ class UserData {
     required this.writerOf,
   });
 
+  static UserData fromFirebase({
+    required User user,
+    required Map<String, dynamic> data,
+  }) =>
+      UserData(
+        user: user,
+        uid: user.uid,
+        email: user.email!,
+        username: data['username'],
+        fullName: data['fullName'],
+        region: data['region'],
+        taste: data['taste'],
+        interests: data['interests'],
+        writerOf: data['writerOf'],
+      );
+
   Map<String, dynamic> toFirestoreMap() => {
+        'email': email,
+        'username': username,
         'fullName': fullName,
+        'region': region,
         'taste': taste,
         'interests': interests,
         'writerOf': writerOf,
-        'region': region,
       };
 }

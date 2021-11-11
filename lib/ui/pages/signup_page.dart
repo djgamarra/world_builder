@@ -22,7 +22,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _authController = Get.find<UsersController>();
+  final _usersController = Get.find<UsersController>();
   final _coreDataController = Get.find<CoreDataController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -41,12 +41,12 @@ class _SignupPageState extends State<SignupPage> {
         _data['region'] = _coreDataController.regions.value[0].code;
       });
     });
-    _authController.errorMessage.listen((errorMessage) {
+    _usersController.errorMessage.listen((errorMessage) {
       if (errorMessage != null) {
         Get.snackbar('Error', errorMessage);
       }
     });
-    _authController.currentStatus.listen((authStatus) {
+    _usersController.currentStatus.listen((authStatus) {
       if (authStatus == AuthStatus.loggedIn) {
         Get.snackbar('Correcto', 'Usuario creado exitosamente');
         Get.off(() => const HomePage());
@@ -63,8 +63,9 @@ class _SignupPageState extends State<SignupPage> {
       });
 
   void _onSignupBtnClick() {
+    Get.focusScope!.unfocus();
     if (_formKey.currentState!.validate()) {
-      _authController.register(
+      _usersController.register(
         _data['email']!,
         _data['password']!,
         _data['username']!,
@@ -93,7 +94,6 @@ class _SignupPageState extends State<SignupPage> {
         ),
         child: SingleChildScrollView(
           child: Container(
-            // alignment: Alignment.bottomCenter,
             width: mediaQuery.size.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -197,15 +197,15 @@ class _SignupPageState extends State<SignupPage> {
                           CustomButton(
                             text: 'INICIAR SESIÓN',
                             onClick: _onLoginBtnClick,
-                            disabled: _authController.loading.value,
+                            disabled: _usersController.loading.value,
                           ),
                           CustomButton(
-                            text: _authController.loading.value
+                            text: _usersController.loading.value
                                 ? 'CREANDO USUARIO...'
                                 : 'REGISTRARSE',
                             onClick: _onSignupBtnClick,
                             solid: true,
-                            disabled: _authController.loading.value,
+                            disabled: _usersController.loading.value,
                           ),
                         ],
                       ),
@@ -219,257 +219,5 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
-
-    // return Scaffold(
-    //   body: Form(
-    //     key: _formKey,
-    //     child: SingleChildScrollView(
-    //       child: Container(
-    //         alignment: Alignment.bottomCenter,
-    //         height: mediaQuery.size.height,
-    //         width: mediaQuery.size.width,
-    //         decoration: const BoxDecoration(
-    //           image: DecorationImage(
-    //             image: AssetImage("assets/background.jpg"),
-    //             fit: BoxFit.fill,
-    //           ),
-    //         ),
-    //         child: Container(
-    //           height: mediaQuery.size.height,
-    //           width: mediaQuery.size.width,
-    //           decoration: const BoxDecoration(
-    //             color: Color(0xAACCDDE7),
-    //             borderRadius: BorderRadius.only(
-    //               topRight: Radius.circular(15),
-    //               topLeft: Radius.circular(15),
-    //             ),
-    //           ),
-    //           // ignore: sized_box_for_whitespace
-    //           child: Container(
-    //             width: mediaQuery.size.width * .85,
-    //             height: mediaQuery.size.height,
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //               children: <Widget>[
-    //                 SvgPicture.asset(
-    //                   'assets/logo_login.svg',
-    //                   semanticsLabel: 'World Builder Logo',
-    //                   height: mediaQuery.size.height * 0.15,
-    //                   fit: BoxFit.scaleDown,
-    //                 ),
-    //                 // ignore: sized_box_for_whitespace
-    //                 Container(
-    //                   height: mediaQuery.size.height * .65,
-    //                   width: mediaQuery.size.width * .85,
-    //                   child: SingleChildScrollView(
-    //                     child: Column(
-    //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                       children: <Widget>[
-    //                         //ctrl+v
-    //                         Column(
-    //                           children: <Widget>[
-    //                             const Padding(
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-    //                               child: Align(
-    //                                 alignment: Alignment.centerLeft,
-    //                                 child: Text(
-    //                                   'Usuario',
-    //                                   style: TextStyle(fontSize: 16),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             TextFormField(
-    //                               onChanged: _onFieldChanged('username'),
-    //                               keyboardType: TextInputType.name,
-    //                               validator: usernameValidator,
-    //                               decoration: InputDecoration(
-    //                                 border: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.circular(10),
-    //                                   borderSide: const BorderSide(
-    //                                     width: 0,
-    //                                     style: BorderStyle.none,
-    //                                   ),
-    //                                 ),
-    //                                 filled: true,
-    //                                 fillColor: Colors.white,
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                         Column(
-    //                           children: <Widget>[
-    //                             const Padding(
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-    //                               child: Align(
-    //                                 alignment: Alignment.centerLeft,
-    //                                 child: Text(
-    //                                   'Nombre Completo',
-    //                                   style: TextStyle(fontSize: 16),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             TextFormField(
-    //                               onChanged: _onFieldChanged('fullName'),
-    //                               keyboardType: TextInputType.name,
-    //                               decoration: InputDecoration(
-    //                                 filled: true,
-    //                                 fillColor: Colors.white,
-    //                                 border: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.circular(10),
-    //                                   borderSide: const BorderSide(
-    //                                     width: 0,
-    //                                     style: BorderStyle.none,
-    //                                   ),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                         Column(
-    //                           children: <Widget>[
-    //                             const Padding(
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-    //                               child: Align(
-    //                                 alignment: Alignment.centerLeft,
-    //                                 child: Text(
-    //                                   'Correo Electrónico',
-    //                                   style: TextStyle(fontSize: 16),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             TextFormField(
-    //                               onChanged: _onFieldChanged('email'),
-    //                               validator: emailValidator,
-    //                               keyboardType: TextInputType.emailAddress,
-    //                               decoration: InputDecoration(
-    //                                 border: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.circular(10),
-    //                                   borderSide: const BorderSide(
-    //                                     width: 0,
-    //                                     style: BorderStyle.none,
-    //                                   ),
-    //                                 ),
-    //                                 filled: true,
-    //                                 fillColor: Colors.white,
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                         Column(
-    //                           children: <Widget>[
-    //                             const Padding(
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-    //                               child: Align(
-    //                                 alignment: Alignment.centerLeft,
-    //                                 child: Text(
-    //                                   'Contraseña',
-    //                                   style: TextStyle(fontSize: 16),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             TextFormField(
-    //                               onChanged: _onFieldChanged('password'),
-    //                               obscureText: true,
-    //                               keyboardType: TextInputType.visiblePassword,
-    //                               decoration: InputDecoration(
-    //                                 filled: true,
-    //                                 fillColor: Colors.white,
-    //                                 border: OutlineInputBorder(
-    //                                   borderRadius: BorderRadius.circular(10),
-    //                                   borderSide: const BorderSide(
-    //                                     width: 0,
-    //                                     style: BorderStyle.none,
-    //                                   ),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                         Column(
-    //                           children: <Widget>[
-    //                             const Padding(
-    //                               padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-    //                               child: Align(
-    //                                 alignment: Alignment.centerLeft,
-    //                                 child: Text(
-    //                                   'Region',
-    //                                   style: TextStyle(fontSize: 16),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             // ignore: sized_box_for_whitespace
-    //                             Container(
-    //                               width: mediaQuery.size.width,
-    //                               child: DropdownButtonHideUnderline(
-    //                                 child: ButtonTheme(
-    //                                   alignedDropdown: true,
-    //                                   child: DropdownButton(
-    //                                     // dropdownColor: Colors.red,
-    //                                     borderRadius: BorderRadius.circular(10),
-    //                                     autofocus: true,
-    //                                     elevation: 0,
-    //                                     icon: const Icon(
-    //                                       Icons.keyboard_arrow_down,
-    //                                     ),
-    //                                     value: _data['region'],
-    //                                     items: _regions.map((Region region) {
-    //                                       return DropdownMenuItem(
-    //                                         value: region.code,
-    //                                         child: Text(region.name),
-    //                                       );
-    //                                     }).toList(),
-    //                                     onChanged: _onFieldChanged('region'),
-    //                                   ),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 // ignore: sized_box_for_whitespace
-    //                 Container(
-    //                   width: mediaQuery.size.width * .85,
-    //                   height: mediaQuery.size.height * .2,
-    //                   child: Column(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                     children: <Widget>[
-    //                       ElevatedButton(
-    //                         onPressed: _onSignupBtnClick,
-    //                         style: ElevatedButton.styleFrom(
-    //                             elevation: 0,
-    //                             primary: const Color(0xFF92D8FF),
-    //                             fixedSize:
-    //                                 Size(mediaQuery.size.width * 0.4, 50)),
-    //                         child: Text(
-    //                           "REGISTRARSE",
-    //                           style: GoogleFonts.play(fontSize: 18),
-    //                         ),
-    //                       ),
-    //                       ElevatedButton(
-    //                         onPressed: _onLoginBtnClick,
-    //                         style: ElevatedButton.styleFrom(
-    //                             elevation: 0,
-    //                             primary: Colors.white,
-    //                             fixedSize:
-    //                                 Size(mediaQuery.size.width * 0.4, 50)),
-    //                         child: Text(
-    //                           "LOGIN",
-    //                           style: GoogleFonts.play(fontSize: 18),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
