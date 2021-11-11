@@ -15,7 +15,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '', _password = '';
+  final Map<String, String> _data = {
+    'email': '',
+    'password': '',
+  };
 
   String? _emailValidator(String? email) {
     if (email == null) {
@@ -40,17 +43,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  void _onEmailChanged(String email) => setState(() {
-        _email = email;
-      });
-
-  void _onPasswordChanged(String password) => setState(() {
-        _password = password;
+  _onFieldChanged(String key) => (text) => setState(() {
+        _data[key] = text ?? '';
       });
 
   void _onLoginBtnClick() {
     if (_formKey.currentState!.validate()) {
-      Get.find<AuthController>().login(_email, _password);
+      Get.find<AuthController>().login(_data['email']!, _data['password']!);
     }
   }
 
@@ -82,9 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
     const String logoUrl = 'assets/logo_login.svg';
     final mediaQuery = MediaQuery.of(context);
     final authController = Get.find<AuthController>();
-    authController.errorCode.listen((errorCode) {
-      if (errorCode != null) {
-        Get.snackbar('Error', errorCode);
+    authController.errorMessage.listen((errorMessage) {
+      if (errorMessage != null) {
+        Get.snackbar('Error', errorMessage);
       }
     });
     return Scaffold(
@@ -142,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextFormField(
                               keyboardType: TextInputType.emailAddress,
-                              onChanged: _onEmailChanged,
+                              onChanged: _onFieldChanged('email'),
                               validator: _emailValidator,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -173,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextFormField(
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
-                              onChanged: _onPasswordChanged,
+                              onChanged: _onFieldChanged('password'),
                               validator: _passwordValidator,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
