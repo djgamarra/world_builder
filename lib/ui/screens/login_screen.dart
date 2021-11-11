@@ -1,11 +1,9 @@
 import 'dart:ui';
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:world_builder/services/blocs/auth/auth_bloc.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,30 +11,6 @@ class LoginScreen extends StatefulWidget {
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
-}
-
-//animación de cambio a Register Screen
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        const RegisterScreen(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      final tween = Tween(begin: begin, end: end);
-      final curvedAnimation = CurvedAnimation(
-        parent: animation,
-        curve: curve,
-      );
-
-      return SlideTransition(
-        position: tween.animate(curvedAnimation),
-        child: child,
-      );
-    },
-  );
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -55,16 +29,37 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onLoginBtnClick() {
-    Get.find<AuthBloc>().add(LoginEvent(
-      email: _email,
-      password: _password,
-    ));
+    Get.find<AuthController>().login(_email, _password);
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const RegisterScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        final tween = Tween(begin: begin, end: end);
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: curve,
+        );
+
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     const String logoUrl = 'assets/logo_login.svg';
     final mediaQuery = MediaQuery.of(context);
+    final authController = Get.find<AuthController>();
     return Scaffold(
       body: Container(
         alignment: Alignment.bottomCenter,
@@ -97,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   semanticsLabel: 'World Builder Logo',
                   fit: BoxFit.scaleDown,
                 ),
+                Obx(() => Text(authController.currentStatus.toString())),
                 // ignore: sized_box_for_whitespace
                 Container(
                   width: mediaQuery.size.width * .85,
