@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:world_builder/controllers/users_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
@@ -64,8 +63,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -111,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 CustomTextField(
                   initialValue: _data['fullName']!,
                   field: 'fullName',
-                  label: 'Nombre real',
+                  label: 'Nombre',
                   onChanged: _onFieldChanged,
                   type: TextInputType.name,
                 ),
@@ -121,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   field: 'taste',
                   label: 'Gustos literarios',
                   onChanged: _onFieldChanged,
-                  type: TextInputType.name,
+                  type: TextInputType.multiline,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
@@ -129,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   field: 'interests',
                   label: 'Intereses',
                   onChanged: _onFieldChanged,
-                  type: TextInputType.name,
+                  type: TextInputType.multiline,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
@@ -137,17 +134,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   field: 'writerOf',
                   label: 'Tipo de literatura que escribo',
                   onChanged: _onFieldChanged,
-                  type: TextInputType.name,
+                  type: TextInputType.multiline,
                 ),
                 const SizedBox(height: 40),
-                CustomButton(
-                  text: 'GUARDAR',
-                  onClick: _onSaveBtnClick,
-                  disabled: _usersController.loading.value,
-                  solid: true,
-                  fullWidth: true,
+                Obx(
+                  () => CustomButton(
+                    text: _usersController.loading.value
+                        ? 'GUARDANDO...'
+                        : 'GUARDAR',
+                    onClick: _onSaveBtnClick,
+                    disabled: _usersController.loading.value,
+                    solid: true,
+                    fullWidth: true,
+                  ),
                 ),
-                const SizedBox(height: 30),
               ],
             ),
           ),

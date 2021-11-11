@@ -53,6 +53,7 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
         TextFormField(
+          maxLines: type == TextInputType.multiline ? null : 1,
           initialValue: initialValue,
           validator: validator,
           keyboardType: type,

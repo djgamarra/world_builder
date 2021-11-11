@@ -69,8 +69,8 @@ class UsersController {
       await _store.set('users', user.uid, newUserData.toFirestoreMap());
     } catch (_) {
       errorMessage.value = 'Error de conexión';
-      loading.value = false;
     }
+    loading.value = false;
   }
 
   void login(String email, String password) async {
