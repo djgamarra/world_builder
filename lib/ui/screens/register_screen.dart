@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
+import 'package:world_builder/models/region.dart';
 import 'package:world_builder/ui/screens/login_screen.dart';
 import 'package:world_builder/ui/utils.dart';
 
@@ -21,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _authController = Get.find<AuthController>();
   final _coreDataController = Get.find<CoreDataController>();
 
-  List<String> _regions = [];
+  List<Region> _regions = [];
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
     'username': '',
@@ -33,11 +34,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _RegisterScreenState() {
     _regions = _coreDataController.regions.value;
-    _data['region'] = _regions[0];
+    _data['region'] = _regions[0].code;
     _coreDataController.regions.listen((regions) {
       setState(() {
         _regions = regions;
-        _data['region'] = _regions[0];
+        _data['region'] = _regions[0].code;
       });
     });
     _authController.errorMessage.listen((errorMessage) {
@@ -269,10 +270,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           Icons.keyboard_arrow_down,
                                         ),
                                         value: _data['region'],
-                                        items: _regions.map((String region) {
+                                        items: _regions.map((Region region) {
                                           return DropdownMenuItem(
-                                            value: region,
-                                            child: Text(region),
+                                            value: region.code,
+                                            child: Text(region.name),
                                           );
                                         }).toList(),
                                         onChanged: _onFieldChanged('region'),

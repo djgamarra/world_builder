@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/services/authentication_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
@@ -10,8 +11,7 @@ class AuthController {
   late final FirestoreService _store;
 
   final currentStatus = Rx<AuthStatus>(AuthStatus.loading);
-  final currentUser = Rx<User?>(null);
-  final currentUserData = Rx<Map<String, dynamic>?>(null);
+  final currentUser = Rx<UserData?>(null);
   final errorMessage = Rx<String?>(null);
 
   AuthController({
@@ -23,20 +23,29 @@ class AuthController {
   }
 
   Future<void> init() async {
-    _auth.subscribeToChanges((user) async {
-      currentUser.value = user;
-      if (user == null) {
-        currentUserData.value = null;
-        currentStatus.value = AuthStatus.loggedOut;
-      } else {
-        try {
-          currentUserData.value = (await _store.get('users', user.uid)).data();
-        } catch (_) {
-          currentUserData.value = {};
-        }
-        currentStatus.value = AuthStatus.loggedIn;
+    _auth.subscribeToChanges(_handleAuthChanges);
+  }
+
+  void _handleAuthChanges(User? user) async {
+    if (user == null) {
+      currentUser.value = null;
+      currentStatus.value = AuthStatus.loggedOut;
+    } else {
+      Map<String, dynamic> data;
+      try {
+        data = (await _store.get('users', user.uid)).data() ?? {};
+      } catch (_) {
+        data = {};
       }
-    });
+      currentUser.value = UserData(
+        uid: user.uid,
+        email: user.email!,
+        username: user.displayName ?? '',
+        fullName: data['fullName'] ?? '',
+        region: data['region'] ?? '',
+      );
+      currentStatus.value = AuthStatus.loggedIn;
+    }
   }
 
   void login(String email, String password) async {
