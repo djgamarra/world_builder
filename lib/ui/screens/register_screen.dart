@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:world_builder/ui/screens/homepage.dart';
+import 'package:world_builder/ui/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -10,14 +12,69 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
+Route _createRouteLogIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const LoginScreen(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      final tween = Tween(begin: begin, end: end);
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: curve,
+      );
+
+      return SlideTransition(
+        position: tween.animate(curvedAnimation),
+        child: child,
+      );
+    },
+  );
+}
+
+
+Route _createRouteTwo() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const HomePage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      final tween = Tween(begin: begin, end: end);
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: curve,
+      );
+
+      return SlideTransition(
+        position: tween.animate(curvedAnimation),
+        child: child,
+      );
+    },
+  );
+}
+// Text controllers
+final name = TextEditingController();
+final username = TextEditingController();
+final email = TextEditingController();
+final password = TextEditingController();
+final passwordver = TextEditingController();
+
+bool _validate = false;
+
 class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     String dropdownvalue = 'Region1';
     var regions = ['Region1', 'Region2', 'Region3'];
-
     const String logoUrl = 'assets/logo_login.svg';
     final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
@@ -71,17 +128,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
+                                    controller: username,
                                     decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                )),
+                                      errorText: _validate
+                                          ? "Debe ingresar un valor válido."
+                                          : null,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    )),
                               ],
                             ),
                             Column(
@@ -97,8 +158,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
+                                    controller: name,
                                     obscureText: false,
                                     decoration: InputDecoration(
+                                      errorText: _validate
+                                          ? "Debe ingresar un valor válido."
+                                          : null,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
@@ -124,17 +189,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
+                                    controller: email,
                                     decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                )),
+                                      errorText: _validate
+                                          ? "Debe ingresar un valor válido."
+                                          : null,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    )),
                               ],
                             ),
                             Column(
@@ -150,8 +219,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
+                                    controller: password,
                                     obscureText: true,
                                     decoration: InputDecoration(
+                                      errorText: _validate
+                                          ? "Debe ingresar un valor válido."
+                                          : null,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
@@ -177,8 +250,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 TextFormField(
+                                    controller: passwordver,
                                     obscureText: true,
                                     decoration: InputDecoration(
+                                      errorText: _validate
+                                          ? "Debe ingresar un valor válido."
+                                          : null,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
@@ -243,7 +320,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () => {
+                                if (username.text.isEmpty ||
+                                    name.text.isEmpty ||
+                                    email.text.isEmpty ||
+                                    password.text.isEmpty ||
+                                    passwordver.text.isEmpty)
+                                  {
+                                    _validate = true,
+                                    Navigator.of(context)
+                                        .push(_createRouteLogIn())
+                                  }
+                                else
+                                  {_validate = false},
+                              },
                               style: ElevatedButton.styleFrom(
                                   elevation: 0,
                                   primary: const Color(0xFF92D8FF),
@@ -255,7 +345,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(_createRouteTwo());
+                              },
                               style: ElevatedButton.styleFrom(
                                   elevation: 0,
                                   primary: Colors.white,
