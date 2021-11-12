@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     StoriesPage(),
     ClubsPage(),
     SearchPage(),
-    ProfilePage()
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

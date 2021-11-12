@@ -33,12 +33,21 @@ class UserData {
         writerOf: data['writerOf'],
       );
 
+  Map<String, bool> get usernameIndexMap {
+    final map = <String, bool>{};
+    username.split('').forEach((element) {
+      map[element] = true;
+    });
+    return map;
+  }
+
   Map<String, dynamic> toFirestoreMapPublic() => {
         'username': username,
         'region': region,
         'taste': taste,
         'interests': interests,
         'writerOf': writerOf,
+        'usernameIndex': usernameIndexMap,
       };
 
   Map<String, dynamic> toFirestoreMapPrivate() => {

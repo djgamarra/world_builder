@@ -9,6 +9,9 @@ class FirestoreService {
   Future<DocumentSnapshot<Map<String, dynamic>>> get(String path, String doc) =>
       store.collection(path).doc(doc).get();
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getAll(String path) async =>
+  Future<QuerySnapshot<Map<String, dynamic>>> getAll(String path) =>
       store.collection(path).get();
+
+  CollectionReference<Map<String, dynamic>> query(String path) =>
+      store.collection(path);
 }

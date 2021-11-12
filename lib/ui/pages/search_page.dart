@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/ui/widgets/custom_button.dart';
+import 'package:world_builder/ui/widgets/custom_text_field.dart';
+
+import '../constants.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -10,59 +15,48 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String searchText = '';
+  final _usersController = Get.find<UsersController>();
+  String _searchText = '';
+  List<Map<String, dynamic>> _data = [];
 
-  void _onSearchQChanged(text) => setState(() {
-        searchText = text;
+  void _onSearchQChanged(_, text) => setState(() {
+        _searchText = text;
       });
 
-  void _onSearchBtnClick() {}
+  void _onSearchBtnClick() async {
+    Get.focusScope!.unfocus();
+    final data = await _usersController.searchUsers(_searchText);
+    setState(() {
+      _data = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = Get.mediaQuery;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-              child: Text(
-                'Búsqueda',
-                style: GoogleFonts.play(fontSize: 30),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: TextFormField(
-                onChanged: _onSearchQChanged,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Buscar usuario',
+                  style: primaryFont.copyWith(fontSize: 30),
                 ),
-              ),
+                CustomTextField(
+                  onChanged: _onSearchQChanged,
+                ),
+                CustomButton(
+                  text: 'BUSCAR',
+                  onClick: _onSearchBtnClick,
+                  solid: true,
+                ),
+                ..._data.map((e) => Text(e['username'])).toList(),
+              ],
             ),
-            ElevatedButton(
-              onPressed: _onSearchBtnClick,
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                primary: const Color(0xFF92D8FF),
-                fixedSize: Size(mediaQuery.size.width * 0.4, 50),
-              ),
-              child: Text(
-                "BUSCAR",
-                style: GoogleFonts.play(fontSize: 18),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

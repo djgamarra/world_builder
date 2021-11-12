@@ -52,6 +52,19 @@ class UsersController {
     loading.value = false;
   }
 
+  Future<List<Map<String, dynamic>>> searchUsers(String searchText) async {
+    var region = 'GLOBAL';
+    final user = currentUser.value;
+    if (user != null) {
+      region = user.region;
+    }
+    var query = _store.query('users_public').where('region', isEqualTo: region);
+    searchText.split('').forEach((char) {
+      query = query.where("usernameIndex.$char", isEqualTo: true);
+    });
+    return (await query.limit(10).get()).docs.map((e) => e.data()).toList();
+  }
+
   void updateProfile(
     String fullName,
     String taste,

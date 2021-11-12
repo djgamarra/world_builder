@@ -9,7 +9,8 @@ class CustomTextField extends StatelessWidget {
       defaultRadius = 10,
       defaultLabelGap = 4;
   final Color borderColor, borderErrorColor, backgroundColor;
-  final String initialValue, field, label;
+  final String initialValue, field;
+  final String? label;
   final TextInputType type;
   final Function(String field, String value) onChanged;
   final String? Function(String? value)? validator;
@@ -17,8 +18,8 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     Key? key,
-    required this.label,
     required this.onChanged,
+    this.label,
     this.field = '',
     this.borderColor = defaultBorderColor,
     this.borderErrorColor = defaultBorderErrorColor,
@@ -36,22 +37,24 @@ class CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            defaultLabelGap,
-            0,
-            defaultLabelGap,
-            defaultLabelGap,
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.start,
-            style: primaryFont.copyWith(
-              fontSize: 17,
-              color: borderColor,
-            ),
-          ),
-        ),
+        label == null
+            ? Container()
+            : Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  defaultLabelGap,
+                  0,
+                  defaultLabelGap,
+                  defaultLabelGap,
+                ),
+                child: Text(
+                  label!,
+                  textAlign: TextAlign.start,
+                  style: primaryFont.copyWith(
+                    fontSize: 17,
+                    color: borderColor,
+                  ),
+                ),
+              ),
         TextFormField(
           maxLines: type == TextInputType.multiline ? null : 1,
           initialValue: initialValue,
@@ -64,6 +67,7 @@ class CustomTextField extends StatelessWidget {
             fontSize: 15,
           ),
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
             fillColor: backgroundColor,
             isDense: true,
             filled: true,
