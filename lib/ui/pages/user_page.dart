@@ -1,22 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/ui/widgets/custom_text_field.dart';
 
 import '../constants.dart';
 
 class UserPage extends StatelessWidget {
+  final _followingsController = Get.find<FollowingsController>();
   final ExternalUserData user;
 
-  const UserPage({
+  UserPage({
     Key? key,
     required this.user,
   }) : super(key: key);
 
   void _onGoBackClick() => Get.back();
 
-  void _onFollowClick() {}
+  void _onStopFollowingClick() async {
+    await _followingsController.stopFollowing(user.uid);
+    await _followingsController.reload();
+    Get.snackbar('Correcto', "Has dejado de seguir a @${user.username}");
+  }
+
+  void _onStartFollowingClick() async {
+    await _followingsController.startFollowing(user.uid);
+    await _followingsController.reload();
+    Get.snackbar('Correcto', "Ahora eres seguidor de @${user.username}");
+  }
+
+  Widget _renderFollowIcon() => Obx(() {
+        final followed = _followingsController.data.value.containsKey(user.uid);
+        return IconButton(
+          onPressed: followed ? _onStopFollowingClick : _onStartFollowingClick,
+          icon: Icon(followed ? Icons.person_remove : Icons.person_add),
+          color: defaultBorderColor,
+        );
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +63,13 @@ class UserPage extends StatelessWidget {
                       "@${user.username}",
                       style: primaryFont.copyWith(fontSize: 25),
                     ),
-                    IconButton(
-                      tooltip: 'Seguir',
-                      onPressed: _onFollowClick,
-                      icon: const Icon(Icons.person_add),
-                      color: defaultBorderColor,
-                    ),
+                    // IconButton(
+                    //   tooltip: 'Seguir',
+                    //   onPressed: _onFollowClick,
+                    //   icon: const Icon(Icons.person_add),
+                    //   color: defaultBorderColor,
+                    // ),
+                    _renderFollowIcon(),
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -83,8 +105,6 @@ class UserPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-
                 Text(
                   'Intereses',
                   textAlign: TextAlign.start,
@@ -122,22 +142,6 @@ class UserPage extends StatelessWidget {
                     color: defaultBorderColor,
                   ),
                 ),
-                // const SizedBox(height: 20),
-                // CustomTextField(
-                //   initialValue: user.interests,
-                //   field: 'interests',
-                //   label: 'Intereses',
-                //   onChanged: (_, __) {},
-                //   type: TextInputType.multiline,
-                // ),
-                // const SizedBox(height: 10),
-                // CustomTextField(
-                //   initialValue: user.writerOf,
-                //   field: 'writerOf',
-                //   label: 'Tipo de literatura que escribo',
-                //   onChanged: (_, __) {},
-                //   type: TextInputType.multiline,
-                // ),
                 const SizedBox(height: 40),
               ],
             ),

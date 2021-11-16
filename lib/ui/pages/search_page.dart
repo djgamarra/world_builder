@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/controllers/search_controller.dart';
 import 'package:world_builder/ui/utils.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -20,6 +21,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final _authController = Get.find<AuthController>();
   final _searchController = Get.find<SearchController>();
+  final _followingsController = Get.find<FollowingsController>();
 
   final _formKey = GlobalKey<FormState>();
   String _searchText = '';
@@ -32,7 +34,12 @@ class _SearchPageState extends State<SearchPage> {
     if (_formKey.currentState!.validate()) {
       Get.focusScope!.unfocus();
       final status = _authController.currentStatus.value as AuthOkStatus;
-      await _searchController.searchOver(_searchText, status.userData);
+      await _followingsController
+          .ensureLoaded(params: {'uid': status.userData.uid});
+      await _searchController.reload(params: {
+        'query': _searchText,
+        'user': status.userData,
+      });
     }
   }
 
@@ -45,7 +52,13 @@ class _SearchPageState extends State<SearchPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _searchController.data.value
                   .where((user) => user.uid != status.userData.uid)
-                  .map((user) => UserSearchItem(user: user))
+                  .map(
+                    (user) => UserSearchItem(
+                      user: user,
+                      followed: _followingsController.data.value
+                          .containsKey(user.uid),
+                    ),
+                  )
                   .toList(),
             );
           case DataLoadStatus.unloaded:

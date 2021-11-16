@@ -78,8 +78,14 @@ class UsersService {
       (await _store.query("users_public/$uid/followings").get()).docs.map((e) {
         final data = e.data();
         return FollowSignature(
-          since: DateTime.parse(data['since']),
+          since: (data['since'] as Timestamp).toDate(),
           uid: e.id,
         );
       }).toList();
+
+  Future<void> startFollowing(String from, String to) => _store
+      .set("users_public/$from/followings", to, {'since': DateTime.now()});
+
+  Future<void> stopFollowing(String from, String to) =>
+      _store.delete("users_public/$from/followings", to);
 }

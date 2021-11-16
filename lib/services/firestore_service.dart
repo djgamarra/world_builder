@@ -6,6 +6,9 @@ class FirestoreService {
   Future<void> set(String path, String doc, Map<String, dynamic> data) =>
       store.collection(path).doc(doc).set(data);
 
+  Future<void> delete(String path, String doc) =>
+      store.collection(path).doc(doc).delete();
+
   Future<DocumentSnapshot<Map<String, dynamic>>> get(String path, String doc) =>
       store.collection(path).doc(doc).get();
 

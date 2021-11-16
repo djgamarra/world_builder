@@ -6,8 +6,6 @@ import 'data_controller.dart';
 
 class SearchController extends DataController<List<ExternalUserData>> {
   final _users = Get.find<UsersService>();
-  String _query = '';
-  UserData? _user;
 
   SearchController() : super([]);
 
@@ -16,13 +14,7 @@ class SearchController extends DataController<List<ExternalUserData>> {
 
   @override
   Future<List<ExternalUserData>> loader() => _users.searchUsers(
-        _query,
-        region: _user!.region,
+        params['query'],
+        region: params['user'].region,
       );
-
-  Future<void> searchOver(String query, UserData user) async {
-    _query = query;
-    _user = user;
-    await load();
-  }
 }

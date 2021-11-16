@@ -1,6 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/followings_controller.dart';
+import 'package:world_builder/controllers/search_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/search_page.dart';
 import 'package:world_builder/ui/pages/clubs_page.dart';
@@ -16,6 +20,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+
+  _HomePageState() {
+    Get.find<SearchController>().resetData();
+    Get.find<FollowingsController>().resetData();
+  }
 
   static const List<Widget> _widgetOptions = <Widget>[
     StoriesPage(),
