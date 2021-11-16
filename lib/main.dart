@@ -17,7 +17,8 @@ void main() async {
   Get.put(UsersService());
   // controllers
   Get.put(AuthController());
-  Get.put(RegionsController()).ensureInitialized();
+  Get.put(RegionsController()).ensureLoaded();
+  Get.put(SearchController());
   runApp(const MyApp());
 }
 

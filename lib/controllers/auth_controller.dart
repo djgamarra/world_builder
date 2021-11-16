@@ -22,8 +22,8 @@ class AuthOkStatus extends AuthStatus {
   const AuthOkStatus({required this.userData});
 }
 
-class AuthUpdateStatus extends AuthOkStatus {
-  AuthUpdateStatus({required UserData userData}) : super(userData: userData);
+class AuthCurrentUserUpdateStatus extends AuthOkStatus {
+  AuthCurrentUserUpdateStatus({required UserData userData}) : super(userData: userData);
 }
 
 class AuthErrorStatus extends AuthStatus {
@@ -46,7 +46,7 @@ class AuthController {
   ) async {
     final status = currentStatus.value;
     if (status is AuthOkStatus) {
-      currentStatus.value = AuthUpdateStatus(userData: status.userData);
+      currentStatus.value = AuthCurrentUserUpdateStatus(userData: status.userData);
       final newUserData = await _users.updateProfile(
         fullName,
         taste,

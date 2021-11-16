@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:world_builder/models/region.dart';
+import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/services/firestore_service.dart';
+import 'package:world_builder/services/users_service.dart';
 
 enum CoreDataLoadStatus { unloaded, loaded, loadedWError, loading }
 
@@ -15,10 +17,14 @@ abstract class CoreDataController<T> {
     data = Rx<T>(defaultValue);
   }
 
-  void ensureInitialized() async {
+  Future<void> ensureLoaded() async {
     if (loadStatus.value == CoreDataLoadStatus.loaded) {
       return;
     }
+    await _load();
+  }
+
+  Future<void> _load() async {
     loadStatus.value = CoreDataLoadStatus.loading;
     try {
       data.value = await _loader();
@@ -53,5 +59,29 @@ class RegionsController extends CoreDataController<List<Region>> {
       (regionA, regionB) => regionA.name.compareTo(regionB.name),
     );
     return _regions;
+  }
+}
+
+class SearchController extends CoreDataController<List<ExternalUserData>> {
+  final _users = Get.find<UsersService>();
+  String _region = 'GLOBAL', _query = '';
+
+  SearchController() : super([]);
+
+  @override
+  final errorMessage = 'Error al realizar la búsqueda';
+
+  @override
+  Future<List<ExternalUserData>> _loader() => _users.searchUsers(
+        _query,
+        region: _region,
+      );
+
+  Future<void> searchOver(String query, String region) async {
+    _region = region;
+    _query = query;
+    await _load();
+    _region = '';
+    _query = '';
   }
 }

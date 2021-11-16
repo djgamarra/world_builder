@@ -26,13 +26,22 @@ class UsersService {
         ),
       ]);
 
-  Future<List<Map<String, dynamic>>> searchUsers(String searchText,
-      {String region = 'GLOBAL'}) async {
+  Future<List<ExternalUserData>> searchUsers(String searchText,
+      {required String region}) async {
     var query = _store.query('users_public').where('region', isEqualTo: region);
     searchText.split('').toSet().forEach((char) {
       query = query.where("usernameIndex.$char", isEqualTo: true);
     });
-    return (await query.limit(10).get()).docs.map((e) => e.data()).toList();
+    return (await query.limit(10).get()).docs.map<ExternalUserData>((e) {
+      final data = e.data();
+      return ExternalUserData(
+        username: data['username']!,
+        taste: data['taste']!,
+        interests: data['interests']!,
+        writerOf: data['writerOf']!,
+        region: data['region']!,
+      );
+    }).toList();
   }
 
   Future<UserData> updateProfile(

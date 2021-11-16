@@ -39,7 +39,7 @@ String? usernameValidator(String? username) {
 }
 
 String? usernameSearchValidator(String? username) {
-  if (username == null) {
+  if (username == null || username.isEmpty) {
     return 'Escriba un nombre de usuario';
   }
   if (username.length > 12) {
@@ -51,4 +51,3 @@ String? usernameSearchValidator(String? username) {
   }
   return null;
 }
-

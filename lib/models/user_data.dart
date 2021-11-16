@@ -1,37 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserData {
-  final String uid, email, username, fullName, region;
-  final String taste, interests, writerOf;
-  final User user;
+class ExternalUserData {
+  final String username, taste, interests, writerOf, region;
 
-  const UserData({
-    required this.uid,
-    required this.email,
+  const ExternalUserData({
     required this.username,
-    required this.fullName,
-    required this.region,
-    required this.user,
     required this.taste,
     required this.interests,
     required this.writerOf,
+    required this.region,
   });
-
-  static UserData fromFirebase({
-    required User user,
-    required Map<String, dynamic> data,
-  }) =>
-      UserData(
-        user: user,
-        uid: user.uid,
-        email: user.email!,
-        username: data['username'],
-        fullName: data['fullName'],
-        region: data['region'],
-        taste: data['taste'],
-        interests: data['interests'],
-        writerOf: data['writerOf'],
-      );
 
   Map<String, bool> get usernameIndexMap {
     final map = <String, bool>{};
@@ -49,6 +27,45 @@ class UserData {
         'writerOf': writerOf,
         'usernameIndex': usernameIndexMap,
       };
+}
+
+class UserData extends ExternalUserData {
+  final String uid, email, fullName;
+  final User user;
+
+  const UserData({
+    required this.uid,
+    required this.email,
+    required this.fullName,
+    required this.user,
+    required String username,
+    required String region,
+    required String taste,
+    required String interests,
+    required String writerOf,
+  }) : super(
+          region: region,
+          writerOf: writerOf,
+          interests: interests,
+          taste: taste,
+          username: username,
+        );
+
+  static UserData fromFirebase({
+    required User user,
+    required Map<String, dynamic> data,
+  }) =>
+      UserData(
+        user: user,
+        uid: user.uid,
+        email: user.email!,
+        username: data['username'],
+        fullName: data['fullName'],
+        region: data['region'],
+        taste: data['taste'],
+        interests: data['interests'],
+        writerOf: data['writerOf'],
+      );
 
   Map<String, dynamic> toFirestoreMapPrivate() => {
         'email': email,

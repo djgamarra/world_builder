@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _renderActionButton() => Obx(() {
         final status = _authController.currentStatus.value;
-        if (status is AuthUpdateStatus) {
+        if (status is AuthCurrentUserUpdateStatus) {
           return CustomButton(
             text: 'GUARDANDO...',
             onClick: _onSaveBtnClick,
