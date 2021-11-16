@@ -1,26 +1,23 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
-import 'package:world_builder/services/authentication_service.dart';
+import 'package:world_builder/services/auth_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
+import 'package:world_builder/services/users_service.dart';
 import 'package:world_builder/ui/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  final authService = Get.put(AuthenticationService());
-  final firestoreService = Get.put(FirestoreService());
-  final usersController = Get.put(UsersController(
-    authenticationService: authService,
-    firestoreService: firestoreService,
-  ));
-  final coreDataController = Get.put(CoreDataController(
-    firestoreService: firestoreService,
-  ));
-  await usersController.init();
-  await coreDataController.init();
+  // services
+  Get.put(AuthService());
+  Get.put(FirestoreService());
+  Get.put(UsersService());
+  // controllers
+  Get.put(AuthController());
+  Get.put(RegionsController()).ensureInitialized();
   runApp(const MyApp());
 }
 

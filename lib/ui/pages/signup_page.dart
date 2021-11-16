@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/core_data_controller.dart';
 import 'package:world_builder/models/region.dart';
 import 'package:world_builder/ui/constants.dart';
@@ -22,8 +22,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _usersController = Get.find<UsersController>();
-  final _coreDataController = Get.find<CoreDataController>();
+  final _authController = Get.find<AuthController>();
+  final _regionsController = Get.find<RegionsController>();
 
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
@@ -34,26 +34,6 @@ class _SignupPageState extends State<SignupPage> {
     'region': '',
   };
 
-  _SignupPageState() {
-    _data['region'] = _coreDataController.regions.value[0].code;
-    _coreDataController.regions.listen((regions) {
-      setState(() {
-        _data['region'] = _coreDataController.regions.value[0].code;
-      });
-    });
-    _usersController.errorMessage.listen((errorMessage) {
-      if (errorMessage != null) {
-        Get.snackbar('Error', errorMessage);
-      }
-    });
-    _usersController.currentStatus.listen((authStatus) {
-      if (authStatus == AuthStatus.loggedIn) {
-        Get.snackbar('Correcto', 'Usuario creado exitosamente');
-        Get.off(() => const HomePage());
-      }
-    });
-  }
-
   void _onFieldChanged(String field, String value) => setState(() {
         _data[field] = value;
       });
@@ -62,16 +42,25 @@ class _SignupPageState extends State<SignupPage> {
         _data['region'] = value ?? '';
       });
 
-  void _onSignupBtnClick() {
-    Get.focusScope!.unfocus();
+  void _onSignupBtnClick() async {
     if (_formKey.currentState!.validate()) {
-      _usersController.register(
+      Get.focusScope!.unfocus();
+      final authOk = await _authController.register(
         _data['email']!,
         _data['password']!,
         _data['username']!,
         _data['fullName']!,
         _data['region']!,
       );
+      if (authOk) {
+        Get.snackbar('Correcto', 'Usuario creado exitosamente');
+        Get.off(() => const HomePage());
+      } else {
+        final status = _authController.currentStatus.value;
+        if (status is AuthErrorStatus) {
+          Get.snackbar('Error', status.errorMessage);
+        }
+      }
     }
   }
 
@@ -80,10 +69,92 @@ class _SignupPageState extends State<SignupPage> {
     Get.off(() => const LoginPage());
   }
 
+  Widget _renderRegionsDropdown() => Obx(() {
+        switch (_regionsController.loadStatus.value) {
+          case CoreDataLoadStatus.loaded:
+            if ((_data['region'] ?? '') == '') {
+              _data['region'] = _regionsController.data.value[0].code;
+            }
+            return DropdownButton(
+              borderRadius: BorderRadius.circular(10),
+              autofocus: true,
+              elevation: 0,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              value: _data['region'],
+              items: _regionsController.data.value.map((Region region) {
+                return DropdownMenuItem(
+                  value: region.code,
+                  child: Text(
+                    region.name,
+                    style: primaryFont.copyWith(
+                      fontSize: 17,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: _onRegionChanged,
+            );
+          default:
+            return DropdownButton(
+              borderRadius: BorderRadius.circular(10),
+              autofocus: true,
+              elevation: 0,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              value: 'loading',
+              items: [
+                DropdownMenuItem(
+                  value: 'loading',
+                  child: Text(
+                    'Cargando...',
+                    style: primaryFont.copyWith(
+                      fontSize: 17,
+                    ),
+                  ),
+                )
+              ],
+            );
+        }
+      });
+
+  Widget _renderActionButtons() => Obx(() {
+        if (_authController.currentStatus.value is AuthInProgressStatus) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                text: 'INICIAR SESIÓN',
+                onClick: _onLoginBtnClick,
+                disabled: true,
+              ),
+              CustomButton(
+                text: 'CREANDO USUARIO...',
+                onClick: _onSignupBtnClick,
+                solid: true,
+                disabled: true,
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                text: 'INICIAR SESIÓN',
+                onClick: _onLoginBtnClick,
+              ),
+              CustomButton(
+                text: 'REGISTRARSE',
+                onClick: _onSignupBtnClick,
+                solid: true,
+              ),
+            ],
+          );
+        }
+      });
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = Get.mediaQuery;
-
     return Scaffold(
       body: Container(
         alignment: Alignment.bottomCenter,
@@ -134,30 +205,7 @@ class _SignupPageState extends State<SignupPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Obx(
-                          () => DropdownButton(
-                            borderRadius: BorderRadius.circular(10),
-                            autofocus: true,
-                            elevation: 0,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                            ),
-                            value: _data['region'],
-                            items: _coreDataController.regions.value
-                                .map((Region region) {
-                              return DropdownMenuItem(
-                                value: region.code,
-                                child: Text(
-                                  region.name,
-                                  style: primaryFont.copyWith(
-                                    fontSize: 17,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: _onRegionChanged,
-                          ),
-                        ),
+                        _renderRegionsDropdown(),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -193,26 +241,7 @@ class _SignupPageState extends State<SignupPage> {
                       validator: passwordValidator,
                     ),
                     const SizedBox(height: 25),
-                    Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomButton(
-                            text: 'INICIAR SESIÓN',
-                            onClick: _onLoginBtnClick,
-                            disabled: _usersController.loading.value,
-                          ),
-                          CustomButton(
-                            text: _usersController.loading.value
-                                ? 'CREANDO USUARIO...'
-                                : 'REGISTRARSE',
-                            onClick: _onSignupBtnClick,
-                            solid: true,
-                            disabled: _usersController.loading.value,
-                          ),
-                        ],
-                      ),
-                    ),
+                    _renderActionButtons(),
                     const SizedBox(height: 30),
                   ],
                 ),

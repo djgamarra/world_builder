@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthenticationService {
+class AuthService {
   FirebaseAuth get auth => FirebaseAuth.instance;
+
+  User? get currentUser => auth.currentUser;
 
   void subscribeToChanges(Function(User?) func) =>
       auth.userChanges().listen(func);

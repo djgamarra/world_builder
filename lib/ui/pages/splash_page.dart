@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -16,15 +15,37 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final _usersController = Get.find<UsersController>();
+  final _authController = Get.find<AuthController>();
 
-  void _onLoginBtnClick() {
-    if (_usersController.currentStatus.value == AuthStatus.loggedIn) {
+  void _onLoginBtnClick() async {
+    final authOk = await _authController.reLogin();
+    if (authOk) {
       Get.off(() => const HomePage());
     } else {
       Get.off(() => const LoginPage());
     }
   }
+
+  Widget _renderActionButton() => Obx(() {
+        if (_authController.currentStatus.value is AuthInProgressStatus) {
+          return CustomButton(
+            text: 'INGRESANDO...',
+            fullWidth: true,
+            onClick: _onLoginBtnClick,
+            fontSize: 16,
+            borderWidth: 1.5,
+            disabled: true,
+          );
+        } else {
+          return CustomButton(
+            text: 'INGRESAR',
+            fullWidth: true,
+            onClick: _onLoginBtnClick,
+            fontSize: 16,
+            borderWidth: 1.5,
+          );
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +98,7 @@ class _SplashPageState extends State<SplashPage> {
               const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 26),
-                child: CustomButton(
-                  text: 'INGRESAR',
-                  fullWidth: true,
-                  onClick: _onLoginBtnClick,
-                  fontSize: 16,
-                  borderWidth: 1.5,
-                ),
+                child: _renderActionButton(),
               ),
               const SizedBox(height: 26),
             ],

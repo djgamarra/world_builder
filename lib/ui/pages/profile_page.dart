@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/services/users_service.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -15,7 +16,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _usersController = Get.find<UsersController>();
+  final _authController = Get.find<AuthController>();
+  final _usersService = Get.find<UsersService>();
   final Map<String, String> _data = {
     'fullName': '',
     'taste': '',
@@ -24,42 +26,84 @@ class _ProfilePageState extends State<ProfilePage> {
   };
 
   _ProfilePageState() {
-    _usersController.currentStatus.listen((status) {
-      if (status == AuthStatus.loggedOut) {
-        Get.off(() => const LoginPage());
-      }
-    });
-    _usersController.errorMessage.listen((errorMessage) {
-      if (errorMessage != null) {
-        Get.snackbar('Error', errorMessage);
-      }
-    });
-    final currentUser = _usersController.currentUser.value!;
-    _data['fullName'] = currentUser.fullName;
-    _data['taste'] = currentUser.taste;
-    _data['interests'] = currentUser.interests;
-    _data['writerOf'] = currentUser.writerOf;
+    final status = _authController.currentStatus.value;
+    if (status is AuthOkStatus) {
+      final user = status.userData;
+      _data['fullName'] = user.fullName;
+      _data['taste'] = user.taste;
+      _data['interests'] = user.interests;
+      _data['writerOf'] = user.writerOf;
+    } else {
+      Get.snackbar('Error', 'Ha sucedido un error, inicie sesión nuevamente');
+      Get.off(() => const LoginPage());
+    }
   }
 
   void _onFieldChanged(String field, String value) => setState(() {
         _data[field] = value;
       });
 
-  void _onLogoutBtnClick() {
+  void _onLogoutBtnClick() async {
     Get.focusScope!.unfocus();
-    _usersController.logout();
+    await _authController.logout();
+    Get.off(() => const LoginPage());
   }
 
-  void _onSaveBtnClick() {
+  void _onSaveBtnClick() async {
     Get.focusScope!.unfocus();
-    _usersController.updateProfile(
+    final updateOk = await _authController.updateCurrentUserData(
       _data['fullName']!,
       _data['taste']!,
       _data['interests']!,
       _data['writerOf']!,
     );
-    Get.snackbar('Correcto', 'Datos actualizados');
+    if (updateOk) {
+      Get.snackbar('Correcto', 'Datos actualizados exitosamente');
+    } else {
+      Get.snackbar('Error', 'Ha ocurrido un problema al actualizar los datos');
+    }
   }
+
+  Widget _renderUsernameLabel() => Obx(() {
+        final status = _authController.currentStatus.value;
+        if (status is AuthOkStatus) {
+          return Text(
+            "@${status.userData.username}",
+            style: primaryFont.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        } else {
+          return Text(
+            'Cerrando sesión...',
+            style: primaryFont.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }
+      });
+
+  Widget _renderActionButton() => Obx(() {
+        final status = _authController.currentStatus.value;
+        if (status is AuthUpdateStatus) {
+          return CustomButton(
+            text: 'GUARDANDO...',
+            onClick: _onSaveBtnClick,
+            disabled: true,
+            solid: true,
+            fullWidth: true,
+          );
+        } else {
+          return CustomButton(
+            text: 'GUARDAR',
+            onClick: _onSaveBtnClick,
+            solid: true,
+            fullWidth: true,
+          );
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -97,13 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  "@${_usersController.currentUser.value!.username}",
-                  style: primaryFont.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                _renderUsernameLabel(),
                 const SizedBox(height: 30),
                 CustomTextField(
                   initialValue: _data['fullName']!,
@@ -137,17 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   type: TextInputType.multiline,
                 ),
                 const SizedBox(height: 40),
-                Obx(
-                  () => CustomButton(
-                    text: _usersController.loading.value
-                        ? 'GUARDANDO...'
-                        : 'GUARDAR',
-                    onClick: _onSaveBtnClick,
-                    disabled: _usersController.loading.value,
-                    solid: true,
-                    fullWidth: true,
-                  ),
-                ),
+                _renderActionButton(),
               ],
             ),
           ),

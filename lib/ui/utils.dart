@@ -38,3 +38,17 @@ String? usernameValidator(String? username) {
   return null;
 }
 
+String? usernameSearchValidator(String? username) {
+  if (username == null) {
+    return 'Escriba un nombre de usuario';
+  }
+  if (username.length > 12) {
+    return 'Máximo 12 caracteres';
+  }
+  final hasMatch = RegExp(r"^[a-zA-Z0-9]+$").hasMatch(username);
+  if (!hasMatch) {
+    return 'Sólo puede contener letras y números';
+  }
+  return null;
+}
+

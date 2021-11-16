@@ -35,7 +35,7 @@ class UserData {
 
   Map<String, bool> get usernameIndexMap {
     final map = <String, bool>{};
-    username.split('').forEach((element) {
+    username.split('').toSet().forEach((element) {
       map[element] = true;
     });
     return map;

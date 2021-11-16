@@ -1,9 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:world_builder/controllers/users_controller.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/pages/home_page.dart';
 import 'package:world_builder/ui/pages/signup_page.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -19,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _usersController = Get.find<UsersController>();
+  final _authController = Get.find<AuthController>();
 
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _data = {
@@ -27,30 +26,25 @@ class _LoginPageState extends State<LoginPage> {
     'password': '',
   };
 
-  _LoginPageState() {
-    _usersController.errorMessage.listen((errorMessage) {
-      if (errorMessage != null) {
-        Get.snackbar('Error', errorMessage);
-      }
-    });
-    _usersController.currentStatus.listen((authStatus) {
-      if (authStatus == AuthStatus.loggedIn) {
-        Get.off(() => const HomePage());
-      }
-    });
-  }
-
   void _onFieldChanged(String field, String value) => setState(() {
         _data[field] = value;
       });
 
-  void _onLoginBtnClick() {
-    Get.focusScope!.unfocus();
+  void _onLoginBtnClick() async {
     if (_formKey.currentState!.validate()) {
-      Get.find<UsersController>().login(
+      Get.focusScope!.unfocus();
+      final authOk = await Get.find<AuthController>().login(
         _data['email']!,
         _data['password']!,
       );
+      if (authOk) {
+        Get.off(() => const HomePage());
+      } else {
+        final status = _authController.currentStatus.value;
+        if (status is AuthErrorStatus) {
+          Get.snackbar('Error', status.errorMessage);
+        }
+      }
     }
   }
 
@@ -59,10 +53,45 @@ class _LoginPageState extends State<LoginPage> {
     Get.off(() => const SignupPage());
   }
 
+  Widget _renderActionButtons() => Obx(() {
+        if (_authController.currentStatus.value is AuthInProgressStatus) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                text: 'INICIANDO SESIÓN...',
+                onClick: _onLoginBtnClick,
+                solid: true,
+                disabled: true,
+              ),
+              CustomButton(
+                text: 'REGISTRARSE',
+                onClick: _onRegisterBtnClick,
+                disabled: true,
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                text: 'INICIAR SESIÓN',
+                onClick: _onLoginBtnClick,
+                solid: true,
+              ),
+              CustomButton(
+                text: 'REGISTRARSE',
+                onClick: _onRegisterBtnClick,
+              ),
+            ],
+          );
+        }
+      });
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = Get.mediaQuery;
-
     return Scaffold(
       body: Container(
         alignment: Alignment.bottomCenter,
@@ -119,26 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                     validator: passwordValidator,
                   ),
                   const SizedBox(height: 25),
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomButton(
-                          text: _usersController.loading.value
-                              ? 'INICIANDO SESIÓN...'
-                              : 'INICIAR SESIÓN',
-                          onClick: _onLoginBtnClick,
-                          solid: true,
-                          disabled: _usersController.loading.value,
-                        ),
-                        CustomButton(
-                          text: 'REGISTRARSE',
-                          onClick: _onRegisterBtnClick,
-                          disabled: _usersController.loading.value,
-                        ),
-                      ],
-                    ),
-                  ),
+                  _renderActionButtons(),
                   const SizedBox(height: 30),
                 ],
               ),
