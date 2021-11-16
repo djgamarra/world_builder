@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/models/follow_signature.dart';
 import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
@@ -26,15 +27,18 @@ class UsersService {
         ),
       ]);
 
-  Future<List<ExternalUserData>> searchUsers(String searchText,
-      {required String region}) async {
+  Future<List<ExternalUserData>> searchUsers(
+    String searchText, {
+    required String region,
+  }) async {
     var query = _store.query('users_public').where('region', isEqualTo: region);
     searchText.split('').toSet().forEach((char) {
       query = query.where("usernameIndex.$char", isEqualTo: true);
     });
-    return (await query.limit(10).get()).docs.map<ExternalUserData>((e) {
+    return (await query.limit(10).get()).docs.map((e) {
       final data = e.data();
       return ExternalUserData(
+        uid: e.id,
         username: data['username']!,
         taste: data['taste']!,
         interests: data['interests']!,
@@ -69,4 +73,13 @@ class UsersService {
       return user;
     }
   }
+
+  Future<List<FollowSignature>> getFollowingsOf(String uid) async =>
+      (await _store.query("users_public/$uid/followings").get()).docs.map((e) {
+        final data = e.data();
+        return FollowSignature(
+          since: DateTime.parse(data['since']),
+          uid: e.id,
+        );
+      }).toList();
 }

@@ -26,17 +26,12 @@ class _ProfilePageState extends State<ProfilePage> {
   };
 
   _ProfilePageState() {
-    final status = _authController.currentStatus.value;
-    if (status is AuthOkStatus) {
-      final user = status.userData;
-      _data['fullName'] = user.fullName;
-      _data['taste'] = user.taste;
-      _data['interests'] = user.interests;
-      _data['writerOf'] = user.writerOf;
-    } else {
-      Get.snackbar('Error', 'Ha sucedido un error, inicie sesión nuevamente');
-      Get.off(() => const LoginPage());
-    }
+    final status = _authController.currentStatus.value as AuthOkStatus;
+    final user = status.userData;
+    _data['fullName'] = user.fullName;
+    _data['taste'] = user.taste;
+    _data['interests'] = user.interests;
+    _data['writerOf'] = user.writerOf;
   }
 
   void _onFieldChanged(String field, String value) => setState(() {

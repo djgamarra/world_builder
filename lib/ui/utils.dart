@@ -31,9 +31,9 @@ String? usernameValidator(String? username) {
   if (username.length > 12) {
     return 'Máximo 12 caracteres';
   }
-  final hasMatch = RegExp(r"^[a-zA-Z0-9]+$").hasMatch(username);
+  final hasMatch = RegExp(r"^[a-z]+$").hasMatch(username);
   if (!hasMatch) {
-    return 'Sólo puede contener letras y números';
+    return 'Sólo puede contener letras minúsculas';
   }
   return null;
 }

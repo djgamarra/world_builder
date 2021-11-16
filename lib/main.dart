@@ -2,11 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/controllers/core_data_controller.dart';
+import 'package:world_builder/controllers/data_controller.dart';
 import 'package:world_builder/services/auth_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
 import 'package:world_builder/services/users_service.dart';
 import 'package:world_builder/ui/pages/splash_page.dart';
+
+import 'controllers/regions_controller.dart';
+import 'controllers/search_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

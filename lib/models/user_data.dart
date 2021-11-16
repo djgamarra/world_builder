@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ExternalUserData {
-  final String username, taste, interests, writerOf, region;
+  final String uid, username, taste, interests, writerOf, region;
 
   const ExternalUserData({
+    required this.uid,
     required this.username,
     required this.taste,
     required this.interests,
@@ -30,20 +31,21 @@ class ExternalUserData {
 }
 
 class UserData extends ExternalUserData {
-  final String uid, email, fullName;
+  final String email, fullName;
   final User user;
 
   const UserData({
-    required this.uid,
     required this.email,
     required this.fullName,
     required this.user,
+    required String uid,
     required String username,
     required String region,
     required String taste,
     required String interests,
     required String writerOf,
   }) : super(
+          uid: uid,
           region: region,
           writerOf: writerOf,
           interests: interests,
@@ -59,12 +61,12 @@ class UserData extends ExternalUserData {
         user: user,
         uid: user.uid,
         email: user.email!,
-        username: data['username'],
-        fullName: data['fullName'],
-        region: data['region'],
-        taste: data['taste'],
-        interests: data['interests'],
-        writerOf: data['writerOf'],
+        username: data['username'] ?? '',
+        fullName: data['fullName'] ?? '',
+        region: data['region'] ?? '',
+        taste: data['taste'] ?? '',
+        interests: data['interests'] ?? '',
+        writerOf: data['writerOf'] ?? '',
       );
 
   Map<String, dynamic> toFirestoreMapPrivate() => {

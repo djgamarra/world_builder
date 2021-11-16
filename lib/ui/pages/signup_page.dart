@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/controllers/core_data_controller.dart';
+import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/regions_controller.dart';
 import 'package:world_builder/models/region.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
@@ -71,7 +72,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _renderRegionsDropdown() => Obx(() {
         switch (_regionsController.loadStatus.value) {
-          case CoreDataLoadStatus.loaded:
+          case DataLoadStatus.loaded:
             if ((_data['region'] ?? '') == '') {
               _data['region'] = _regionsController.data.value[0].code;
             }

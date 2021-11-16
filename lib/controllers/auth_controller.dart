@@ -23,7 +23,8 @@ class AuthOkStatus extends AuthStatus {
 }
 
 class AuthCurrentUserUpdateStatus extends AuthOkStatus {
-  AuthCurrentUserUpdateStatus({required UserData userData}) : super(userData: userData);
+  AuthCurrentUserUpdateStatus({required UserData userData})
+      : super(userData: userData);
 }
 
 class AuthErrorStatus extends AuthStatus {
@@ -44,20 +45,18 @@ class AuthController {
     String interests,
     String writerOf,
   ) async {
-    final status = currentStatus.value;
-    if (status is AuthOkStatus) {
-      currentStatus.value = AuthCurrentUserUpdateStatus(userData: status.userData);
-      final newUserData = await _users.updateProfile(
-        fullName,
-        taste,
-        interests,
-        writerOf,
-        status.userData,
-      );
-      currentStatus.value = AuthOkStatus(userData: newUserData);
-      return newUserData != status.userData;
-    }
-    return false;
+    final status = currentStatus.value as AuthOkStatus;
+    currentStatus.value =
+        AuthCurrentUserUpdateStatus(userData: status.userData);
+    final newUserData = await _users.updateProfile(
+      fullName,
+      taste,
+      interests,
+      writerOf,
+      status.userData,
+    );
+    currentStatus.value = AuthOkStatus(userData: newUserData);
+    return newUserData != status.userData;
   }
 
   Future<bool> reLogin() async {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/controllers/core_data_controller.dart';
-import 'package:world_builder/services/users_service.dart';
+import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/search_controller.dart';
 import 'package:world_builder/ui/utils.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
 import 'package:world_builder/ui/widgets/custom_text_field.dart';
+import 'package:world_builder/ui/widgets/user_search_item.dart';
 
 import '../constants.dart';
 
@@ -30,28 +31,26 @@ class _SearchPageState extends State<SearchPage> {
   void _onSearchBtnClick() async {
     if (_formKey.currentState!.validate()) {
       Get.focusScope!.unfocus();
-      final status = _authController.currentStatus.value;
-      if (status is AuthOkStatus) {
-        await _searchController.searchOver(_searchText, status.userData.region);
-      } else {
-        Get.snackbar('Error', 'Ha sucedido un error, inicie sesión nuevamente');
-      }
+      final status = _authController.currentStatus.value as AuthOkStatus;
+      await _searchController.searchOver(_searchText, status.userData);
     }
   }
 
   Widget _renderSearchResults() => Obx(() {
         switch (_searchController.loadStatus.value) {
-          case CoreDataLoadStatus.loading:
-          case CoreDataLoadStatus.loaded:
+          case DataLoadStatus.loading:
+          case DataLoadStatus.loaded:
+            final status = _authController.currentStatus.value as AuthOkStatus;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _searchController.data.value
-                  .map((e) => Text(e.username))
+                  .where((user) => user.uid != status.userData.uid)
+                  .map((user) => UserSearchItem(user: user))
                   .toList(),
             );
-          case CoreDataLoadStatus.unloaded:
+          case DataLoadStatus.unloaded:
             return const SizedBox();
-          case CoreDataLoadStatus.loadedWError:
+          case DataLoadStatus.loadedWError:
             return Text(
               'Error al cargar los resultados',
               style: primaryFont.copyWith(fontSize: 20),
@@ -60,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
       });
 
   Widget _renderActionButton() => Obx(() {
-        if (_searchController.loadStatus.value == CoreDataLoadStatus.loading) {
+        if (_searchController.loadStatus.value == DataLoadStatus.loading) {
           return CustomButton(
             text: 'BUSCANDO...',
             onClick: _onSearchBtnClick,
@@ -88,8 +87,9 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 Text(
                   'Buscar usuario',
-                  style: primaryFont.copyWith(fontSize: 30),
+                  style: primaryFont.copyWith(fontSize: 25),
                 ),
+                const SizedBox(height: 5),
                 Form(
                   key: _formKey,
                   child: CustomTextField(
@@ -98,6 +98,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 _renderActionButton(),
+                const SizedBox(height: 15),
                 _renderSearchResults(),
               ],
             ),
