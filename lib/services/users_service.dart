@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/models/club.dart';
+import 'package:world_builder/models/reference.dart';
 import 'package:world_builder/models/user_data.dart';
-import 'package:world_builder/models/user_signature.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
 class UsersService {
@@ -76,19 +77,27 @@ class UsersService {
     }
   }
 
-  Future<List<UserSignature>> getFollowersOf(String uid) => _store.getDocs(
+  Future<List<Reference>> getFollowersOf(String uid) => _store.getDocs(
         "users_public/$uid/followers",
-        (uid, data) => UserSignature(
+        (uid, data) => Reference(
           createdAt: (data['createdAt'] as Timestamp).toDate(),
           uid: uid,
         ),
       );
 
-  Future<List<UserSignature>> getFollowingsOf(String uid) => _store.getDocs(
+  Future<List<Reference>> getFollowingsOf(String uid) => _store.getDocs(
         "users_public/$uid/followings",
-        (uid, data) => UserSignature(
+        (uid, data) => Reference(
           createdAt: (data['createdAt'] as Timestamp).toDate(),
           uid: uid,
+        ),
+      );
+
+  Future<List<Club>> getClubsOf(String uid) => _store.getDocs(
+        "users_public/$uid/clubs",
+        (uid, data) => Club(
+          name: data['name'],
+          description: data['description'],
         ),
       );
 
