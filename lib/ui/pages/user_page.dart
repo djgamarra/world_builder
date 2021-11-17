@@ -28,12 +28,14 @@ class UserPage extends StatelessWidget {
     await _followingsController.stopFollowing(user.uid);
     await _followingsController.reload();
     Get.snackbar('Correcto', "Has dejado de seguir a @${user.username}");
+    await _userFollowersController.reload();
   }
 
   void _onStartFollowingClick() async {
     await _followingsController.startFollowing(user.uid);
     await _followingsController.reload();
     Get.snackbar('Correcto', "Ahora eres seguidor de @${user.username}");
+    await _userFollowersController.reload();
   }
 
   Widget _renderFollowIcon() => Obx(() {
