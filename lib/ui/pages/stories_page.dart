@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/clubs_controller.dart';
 import 'package:world_builder/controllers/data_controller.dart';
-import 'package:world_builder/ui/pages/create_club.dart';
+import 'package:world_builder/ui/pages/create_story.dart';
 import 'package:world_builder/ui/widgets/story_item.dart';
 
 import '../constants.dart';
@@ -22,7 +22,7 @@ class _StoriesPageState extends State<StoriesPage> {
   }
 
   void _onCreateBtnClick() {
-    Get.to(() => const CreateClub());
+    Get.to(() => const CreateStory());
   }
 
   var historias = ["his1", "his2"];
