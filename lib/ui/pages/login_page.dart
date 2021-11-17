@@ -1,7 +1,8 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/ui/pages/home_page.dart';
 import 'package:world_builder/ui/pages/signup_page.dart';

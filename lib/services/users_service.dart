@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/models/follow_signature.dart';
 import 'package:world_builder/models/user_data.dart';
+import 'package:world_builder/models/user_signature.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
 class UsersService {
@@ -74,34 +74,34 @@ class UsersService {
     }
   }
 
-  Future<List<FollowSignature>> getFollowingsOf(String uid) async =>
-      (await _store.query("users_public/$uid/followings").get()).docs.map((e) {
-        final data = e.data();
-        return FollowSignature(
-          since: (data['since'] as Timestamp).toDate(),
-          uid: e.id,
-        );
-      }).toList();
+  Future<List<UserSignature>> getFollowersOf(String uid) => _store.getDocs(
+        "users_public/$uid/followers",
+        (uid, data) => UserSignature(
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          uid: uid,
+        ),
+      );
 
-  Future<List<FollowSignature>> getFollowersOf(String uid) async =>
-      (await _store.query("users_public/$uid/followers").get()).docs.map((e) {
-        final data = e.data();
-        return FollowSignature(
-          since: (data['since'] as Timestamp).toDate(),
-          uid: e.id,
-        );
-      }).toList();
+  Future<List<UserSignature>> getFollowingsOf(String uid) => _store.getDocs(
+        "users_public/$uid/followings",
+        (uid, data) => UserSignature(
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          uid: uid,
+        ),
+      );
 
   Future<void> startFollowing(String from, String to) async {
     final d = DateTime.now();
     await Future.wait([
-      _store.set("users_public/$from/followings", to, {'since': d}),
-      _store.set("users_public/$to/followers", from, {'since': d}),
+      _store.set("users_public/$from/followings", to, {'createdAt': d}),
+      _store.set("users_public/$to/followers", from, {'createdAt': d}),
     ]);
   }
 
-  Future<void> stopFollowing(String from, String to) => Future.wait([
-        _store.delete("users_public/$from/followings", to),
-        _store.delete("users_public/$to/followers", from),
-      ]);
+  Future<void> stopFollowing(String from, String to) async {
+    await Future.wait([
+      _store.delete("users_public/$from/followings", to),
+      _store.delete("users_public/$to/followers", from),
+    ]);
+  }
 }

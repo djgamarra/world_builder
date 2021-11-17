@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
     Future.wait([
       _followingsController.ensureLoaded(params: {'uid': user.uid}),
       _followersController.ensureLoaded(params: {'uid': user.uid}),
-    ]).then((value) => null);
+    ]);
     _data['fullName'] = user.fullName;
     _data['taste'] = user.taste;
     _data['interests'] = user.interests;

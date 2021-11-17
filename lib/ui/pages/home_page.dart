@@ -4,10 +4,10 @@ import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/controllers/search_controller.dart';
 import 'package:world_builder/ui/constants.dart';
-import 'package:world_builder/ui/pages/search_page.dart';
 import 'package:world_builder/ui/pages/clubs_page.dart';
-import 'package:world_builder/ui/pages/stories_page.dart';
 import 'package:world_builder/ui/pages/profile_page.dart';
+import 'package:world_builder/ui/pages/search_page.dart';
+import 'package:world_builder/ui/pages/stories_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

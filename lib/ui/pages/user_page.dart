@@ -1,20 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/models/user_data.dart';
-import 'package:world_builder/ui/widgets/custom_text_field.dart';
 
 import '../constants.dart';
 
 class UserPage extends StatelessWidget {
   final _followingsController = Get.find<FollowingsController>();
+  final _userFollowingsController = FollowingsController();
+  final _userFollowersController = FollowersController();
   final ExternalUserData user;
 
   UserPage({
     Key? key,
     required this.user,
-  }) : super(key: key);
+  }) : super(key: key) {
+    _userFollowingsController.ensureLoaded(params: {'uid': user.uid});
+    _userFollowersController.ensureLoaded(params: {'uid': user.uid});
+  }
 
   void _onGoBackClick() => Get.back();
 
@@ -38,6 +44,60 @@ class UserPage extends StatelessWidget {
           color: defaultBorderColor,
         );
       });
+
+  Widget _renderFollowsBox() => Obx(() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Siguiendo',
+                style: primaryFont.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                _userFollowingsController.loadStatus.value ==
+                    DataLoadStatus.loading
+                    ? '...'
+                    : "${_userFollowingsController.data.value.length}",
+                style: primaryFont,
+              ),
+            ],
+          ),
+        ),
+      ),
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Seguidores',
+                style: primaryFont.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                _userFollowersController.loadStatus.value ==
+                    DataLoadStatus.loading
+                    ? '...'
+                    : "${_userFollowersController.data.value.length}",
+                style: primaryFont,
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  ));
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +123,6 @@ class UserPage extends StatelessWidget {
                       "@${user.username}",
                       style: primaryFont.copyWith(fontSize: 25),
                     ),
-                    // IconButton(
-                    //   tooltip: 'Seguir',
-                    //   onPressed: _onFollowClick,
-                    //   icon: const Icon(Icons.person_add),
-                    //   color: defaultBorderColor,
-                    // ),
                     _renderFollowIcon(),
                   ],
                 ),
@@ -85,6 +139,8 @@ class UserPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 30),
+                _renderFollowsBox(),
                 const SizedBox(height: 30),
                 Text(
                   'Gustos literarios',
