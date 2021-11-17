@@ -1,16 +1,16 @@
-# world_builder
+# world_builder  
 
-An app for sharing your stories.
+Una aplicación móvil con la que puedes crear historias literarias, personajes, lugares y demás y compartirlas con otras personas con similares gustos literarios.  
 
-## Getting Started
+## Integrantes:  
 
-This project is a starting point for a Flutter application.
+Jose David Padilla Gamarra  
+Luisa María Escobar Linero  
+José Manuel Hurtado Vásquez  
+Jorge Mario Benavides Castro  
+Juan Carlos Ugarriza Verbel  
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Entregado a:  
+Prof. Augusto Salazar  
+Dept. Ingeniería de Sistemas  
+Universidad del Norte  
