@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/models/user_data.dart';
@@ -104,4 +106,12 @@ class UsersService {
       _store.delete("users_public/$to/followers", from),
     ]);
   }
+
+  StreamSubscription subscribeToFollowers(
+          String uid, Function(QuerySnapshot) func) =>
+      _store.query("users_public/$uid/followers").snapshots().listen(func);
+
+  StreamSubscription subscribeToFollowings(
+          String uid, Function(QuerySnapshot) func) =>
+      _store.query("users_public/$uid/followings").snapshots().listen(func);
 }

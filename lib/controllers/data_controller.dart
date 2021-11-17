@@ -16,6 +16,10 @@ abstract class DataController<T> {
     _defaultValue = defaultValue;
   }
 
+  void setParams(Map<String, dynamic>? params) {
+    this.params.addAll(params ?? {});
+  }
+
   Future<void> ensureLoaded({Map<String, dynamic>? params}) async {
     if (loadStatus.value == DataLoadStatus.loaded) {
       return;
@@ -24,7 +28,7 @@ abstract class DataController<T> {
   }
 
   Future<void> reload({Map<String, dynamic>? params}) async {
-    this.params.addAll(params ?? {});
+    setParams(params);
     loadStatus.value = DataLoadStatus.loading;
     try {
       data.value = await loader();
@@ -36,7 +40,7 @@ abstract class DataController<T> {
   }
 
   void resetData({Map<String, dynamic>? params}) {
-    this.params.addAll(params ?? {});
+    setParams(params);
     data.value = _defaultValue;
     loadStatus.value = DataLoadStatus.unloaded;
     params = {};
