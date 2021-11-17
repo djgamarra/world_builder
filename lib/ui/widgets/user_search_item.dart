@@ -36,7 +36,7 @@ class UserSearchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.all(0),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),

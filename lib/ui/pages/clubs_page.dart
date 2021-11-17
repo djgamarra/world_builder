@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:world_builder/ui/widgets/club_item.dart';
 import '../constants.dart';
+
+const listclub = ["chiste", "chiste2", "auxilio"];
+Widget _renderClubResults() => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: listclub
+          .map(
+            (club) => ClubItem(
+              club: club,
+            ),
+          )
+          .toList(),
+    );
 
 class ClubsPage extends StatefulWidget {
   const ClubsPage({Key? key}) : super(key: key);
@@ -26,9 +38,17 @@ class _ClubsPageState extends State<ClubsPage> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Text(
-              'Clubes',
-              style: primaryFont.copyWith(fontSize: 25),
+            child: Column(
+              children: [
+                Text(
+                  'Clubes',
+                  style: primaryFont.copyWith(fontSize: 25),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                _renderClubResults()
+              ],
             ),
           ),
         ),
