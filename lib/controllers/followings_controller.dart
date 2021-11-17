@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/data_controller.dart';
-import 'package:world_builder/models/user_signature.dart';
+import 'package:world_builder/models/reference.dart';
 import 'package:world_builder/services/users_service.dart';
 
-class FollowingsController extends DataController<Map<String, UserSignature>> {
+class FollowingsController extends DataController<Map<String, Reference>> {
   final _users = Get.find<UsersService>();
   StreamSubscription? _sub;
 
@@ -31,9 +31,9 @@ class FollowingsController extends DataController<Map<String, UserSignature>> {
   final String errorMessage = 'Error al cargar la lista de seguidos';
 
   @override
-  Future<Map<String, UserSignature>> loader() async {
+  Future<Map<String, Reference>> loader() async {
     final data = await _users.getFollowingsOf(params['uid']);
-    final result = <String, UserSignature>{};
+    final result = <String, Reference>{};
     for (var following in data) {
       result[following.uid] = following;
     }
