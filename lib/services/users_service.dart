@@ -92,9 +92,16 @@ class UsersService {
         );
       }).toList();
 
-  Future<void> startFollowing(String from, String to) => _store
-      .set("users_public/$from/followings", to, {'since': DateTime.now()});
+  Future<void> startFollowing(String from, String to) async {
+    final d = DateTime.now();
+    await Future.wait([
+      _store.set("users_public/$from/followings", to, {'since': d}),
+      _store.set("users_public/$to/followers", from, {'since': d}),
+    ]);
+  }
 
-  Future<void> stopFollowing(String from, String to) =>
-      _store.delete("users_public/$from/followings", to);
+  Future<void> stopFollowing(String from, String to) => Future.wait([
+        _store.delete("users_public/$from/followings", to),
+        _store.delete("users_public/$to/followers", from),
+      ]);
 }

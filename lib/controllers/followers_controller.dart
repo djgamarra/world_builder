@@ -8,14 +8,14 @@ class FollowersController extends DataController<Map<String, FollowSignature>> {
 
   FollowersController() : super({});
 
-  int get followingsCount => data.value.length;
+  int get count => data.value.length;
 
   @override
   String errorMessage = 'Error al cargar la lista de seguidores';
 
   @override
   Future<Map<String, FollowSignature>> loader() async {
-    final data = await _users.getFollowingsOf(params['uid']);
+    final data = await _users.getFollowersOf(params['uid']);
     final result = <String, FollowSignature>{};
     for (var following in data) {
       result[following.uid] = following;

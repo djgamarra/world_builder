@@ -9,7 +9,7 @@ class FollowingsController
 
   FollowingsController() : super({});
 
-  int get followingsCount => data.value.length;
+  int get count => data.value.length;
 
   @override
   final String errorMessage = 'Error al cargar la lista de seguidos';

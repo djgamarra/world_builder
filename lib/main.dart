@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/services/auth_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
 import 'package:world_builder/services/users_service.dart';
@@ -23,6 +24,7 @@ void main() async {
   Get.put(RegionsController()).ensureLoaded();
   Get.put(SearchController());
   Get.put(FollowingsController());
+  Get.put(FollowersController());
   runApp(const MyApp());
 }
 

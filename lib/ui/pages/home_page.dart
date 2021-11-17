@@ -1,8 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/controllers/search_controller.dart';
 import 'package:world_builder/ui/constants.dart';
@@ -24,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   _HomePageState() {
     Get.find<SearchController>().resetData();
     Get.find<FollowingsController>().resetData();
+    Get.find<FollowersController>().resetData();
   }
 
   static const List<Widget> _widgetOptions = <Widget>[

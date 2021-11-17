@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/services/users_service.dart';
+import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/followers_controller.dart';
+import 'package:world_builder/controllers/followings_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/login_page.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -17,7 +20,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _authController = Get.find<AuthController>();
-  final _usersService = Get.find<UsersService>();
+  final _followingsController = Get.find<FollowingsController>();
+  final _followersController = Get.find<FollowersController>();
   final Map<String, String> _data = {
     'fullName': '',
     'taste': '',
@@ -28,6 +32,10 @@ class _ProfilePageState extends State<ProfilePage> {
   _ProfilePageState() {
     final status = _authController.currentStatus.value as AuthOkStatus;
     final user = status.userData;
+    Future.wait([
+      _followingsController.ensureLoaded(params: {'uid': user.uid}),
+      _followersController.ensureLoaded(params: {'uid': user.uid}),
+    ]).then((value) => null);
     _data['fullName'] = user.fullName;
     _data['taste'] = user.taste;
     _data['interests'] = user.interests;
@@ -100,6 +108,60 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       });
 
+  Widget _renderFollowsBox() => Obx(() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Siguiendo',
+                    style: primaryFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    _followingsController.loadStatus.value ==
+                            DataLoadStatus.loading
+                        ? '...'
+                        : "${_followingsController.data.value.length}",
+                    style: primaryFont,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Seguidores',
+                    style: primaryFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    _followersController.loadStatus.value ==
+                            DataLoadStatus.loading
+                        ? '...'
+                        : "${_followersController.data.value.length}",
+                    style: primaryFont,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +199,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 10),
                 _renderUsernameLabel(),
+                const SizedBox(height: 30),
+                _renderFollowsBox(),
                 const SizedBox(height: 30),
                 CustomTextField(
                   initialValue: _data['fullName']!,
