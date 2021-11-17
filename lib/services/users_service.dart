@@ -98,6 +98,8 @@ class UsersService {
         (uid, data) => Club(
           name: data['name'],
           description: data['description'],
+          gender: data['gender'],
+          members: data['members'],
         ),
       );
 

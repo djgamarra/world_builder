@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:world_builder/controllers/auth_controller.dart';
-import 'package:world_builder/controllers/followings_controller.dart';
-import 'package:world_builder/models/user_data.dart';
+import 'package:world_builder/models/club.dart';
 import 'package:world_builder/ui/constants.dart';
-import 'package:world_builder/ui/pages/user_page.dart';
 
 class ClubItem extends StatelessWidget {
-  final String club;
+  final Club club;
 
-  ClubItem({
+  const ClubItem({
     Key? key,
     required this.club,
   }) : super(key: key);
@@ -31,17 +27,17 @@ class ClubItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                club,
+                club.name,
                 style: primaryFont.copyWith(fontSize: 22),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Genero",
+                    club.gender,
                     style: primaryFont.copyWith(fontSize: 15),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
@@ -50,11 +46,11 @@ class ClubItem extends StatelessWidget {
                         Icons.groups,
                         color: defaultBorderColor,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 7,
                       ),
                       Text(
-                        "69",
+                        club.members.toString(),
                         style: primaryFont.copyWith(fontSize: 15),
                       )
                     ],

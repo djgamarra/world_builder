@@ -13,8 +13,20 @@ class FirestoreService {
       store.collection(path).doc(doc).get();
 
   Future<List<T>> getDocs<T>(
-          String path, T Function(String, Map<String, dynamic>) mapper) async =>
+    String path,
+    T Function(String, Map<String, dynamic>) mapper,
+  ) async =>
       (await query(path).get())
+          .docs
+          .map((e) => mapper(e.id, e.data()))
+          .toList();
+
+  Future<List<T>> getDocsById<T>(
+    String path,
+    List<String> ids,
+    T Function(String, Map<String, dynamic>) mapper,
+  ) async =>
+      (await query(path).where(FieldPath.documentId, whereIn: ids).get())
           .docs
           .map((e) => mapper(e.id, e.data()))
           .toList();
