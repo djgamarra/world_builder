@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:world_builder/models/club.dart';
 import 'package:world_builder/ui/constants.dart';
+import 'package:world_builder/ui/pages/club_page.dart';
 
 class ClubItem extends StatelessWidget {
   final Club club;
@@ -20,7 +22,7 @@ class ClubItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () => Get.to(ClubPage()),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
