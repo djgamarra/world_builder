@@ -108,7 +108,7 @@ class InvitationsController extends DataController<List<Invitation>> {
               .limit(1)
               .get())
           .docs;
-      if (users.isNotEmpty) return true;
+      if (users.isEmpty) return true;
       final userId = users.first.id;
       await _store.set(
         "users_public/$userId/invitations",
@@ -117,6 +117,7 @@ class InvitationsController extends DataController<List<Invitation>> {
       );
       return true;
     } catch (e) {
+      e.printError();
       return false;
     }
   }
