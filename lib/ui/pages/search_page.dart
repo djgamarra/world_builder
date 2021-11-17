@@ -111,6 +111,9 @@ class _SearchPageState extends State<SearchPage> {
                 _renderActionButton(),
                 const SizedBox(height: 15),
                 _renderSearchResults(),
+                const SizedBox(
+                  height: 50,
+                ),
               ],
             ),
           ),

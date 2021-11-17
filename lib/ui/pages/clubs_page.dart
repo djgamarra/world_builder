@@ -2,7 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:world_builder/ui/widgets/club_item.dart';
 import '../constants.dart';
 
-const listclub = ["chiste", "chiste2", "auxilio"];
+const listclub = [
+  "chiste",
+  "chiste2",
+  "auxilio",
+  "mami",
+  "porfavor..",
+  "sacame de aqui",
+  "salvame :c",
+  "auxilioxd",
+  "mamixd",
+  "porfavor..xd",
+  "sacame de xd aqui",
+  "salvame xd :c"
+];
 Widget _renderClubResults() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: listclub
@@ -47,7 +60,10 @@ class _ClubsPageState extends State<ClubsPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                _renderClubResults()
+                _renderClubResults(),
+                const SizedBox(
+                  height: 50,
+                ),
               ],
             ),
           ),
