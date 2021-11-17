@@ -46,58 +46,58 @@ class UserPage extends StatelessWidget {
       });
 
   Widget _renderFollowsBox() => Obx(() => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Siguiendo',
-                style: primaryFont.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Siguiendo',
+                    style: primaryFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    _userFollowingsController.loadStatus.value ==
+                            DataLoadStatus.loading
+                        ? '...'
+                        : "${_userFollowingsController.data.value.length}",
+                    style: primaryFont,
+                  ),
+                ],
               ),
-              Text(
-                _userFollowingsController.loadStatus.value ==
-                    DataLoadStatus.loading
-                    ? '...'
-                    : "${_userFollowingsController.data.value.length}",
-                style: primaryFont,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Seguidores',
-                style: primaryFont.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Seguidores',
+                    style: primaryFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    _userFollowersController.loadStatus.value ==
+                            DataLoadStatus.loading
+                        ? '...'
+                        : "${_userFollowersController.data.value.length}",
+                    style: primaryFont,
+                  ),
+                ],
               ),
-              Text(
-                _userFollowersController.loadStatus.value ==
-                    DataLoadStatus.loading
-                    ? '...'
-                    : "${_userFollowersController.data.value.length}",
-                style: primaryFont,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ],
-  ));
+        ],
+      ));
 
   @override
   Widget build(BuildContext context) {

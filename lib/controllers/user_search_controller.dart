@@ -4,10 +4,10 @@ import 'package:world_builder/services/users_service.dart';
 
 import 'data_controller.dart';
 
-class SearchController extends DataController<List<ExternalUserData>> {
+class UserSearchController extends DataController<List<ExternalUserData>> {
   final _users = Get.find<UsersService>();
 
-  SearchController() : super([]);
+  UserSearchController() : super([]);
 
   @override
   final errorMessage = 'Error al realizar la búsqueda';

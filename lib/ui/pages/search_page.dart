@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/data_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
-import 'package:world_builder/controllers/search_controller.dart';
+import 'package:world_builder/controllers/user_search_controller.dart';
 import 'package:world_builder/ui/utils.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
 import 'package:world_builder/ui/widgets/custom_text_field.dart';
@@ -20,7 +20,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _authController = Get.find<AuthController>();
-  final _searchController = Get.find<SearchController>();
+  final _userSearchController = Get.find<UserSearchController>();
   final _followingsController = Get.find<FollowingsController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -34,23 +34,21 @@ class _SearchPageState extends State<SearchPage> {
     if (_formKey.currentState!.validate()) {
       Get.focusScope!.unfocus();
       final status = _authController.currentStatus.value as AuthOkStatus;
-      await _followingsController
-          .ensureLoaded(params: {'uid': status.userData.uid});
-      await _searchController.reload(params: {
+      await _followingsController.ensureLoaded();
+      await _userSearchController.reload(params: {
         'query': _searchText,
-        'user': status.userData,
       });
     }
   }
 
   Widget _renderSearchResults() => Obx(() {
-        switch (_searchController.loadStatus.value) {
+        switch (_userSearchController.loadStatus.value) {
           case DataLoadStatus.loading:
           case DataLoadStatus.loaded:
             final status = _authController.currentStatus.value as AuthOkStatus;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _searchController.data.value
+              children: _userSearchController.data.value
                   .where((user) => user.uid != status.userData.uid)
                   .map(
                     (user) => UserSearchItem(
@@ -72,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
       });
 
   Widget _renderActionButton() => Obx(() {
-        if (_searchController.loadStatus.value == DataLoadStatus.loading) {
+        if (_userSearchController.loadStatus.value == DataLoadStatus.loading) {
           return CustomButton(
             text: 'BUSCANDO...',
             onClick: _onSearchBtnClick,

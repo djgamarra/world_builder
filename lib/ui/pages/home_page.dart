@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/controllers/auth_controller.dart';
+import 'package:world_builder/controllers/clubs_controller.dart';
 import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
-import 'package:world_builder/controllers/search_controller.dart';
+import 'package:world_builder/controllers/user_search_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/clubs_page.dart';
 import 'package:world_builder/ui/pages/profile_page.dart';
@@ -17,12 +19,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _authController = Get.find<AuthController>();
   int _selectedIndex = 0;
 
   _HomePageState() {
-    Get.find<SearchController>().resetData();
-    Get.find<FollowingsController>().resetData();
-    Get.find<FollowersController>().resetData();
+    final status = _authController.currentStatus.value as AuthOkStatus;
+    Get.find<UserSearchController>()
+        .resetData(params: {'user': status.userData});
+    Get.find<FollowingsController>()
+        .resetData(params: {'uid': status.userData.uid});
+    Get.find<FollowersController>()
+        .resetData(params: {'uid': status.userData.uid});
+    Get.find<ClubsController>().resetData(params: {'uid': status.userData.uid});
   }
 
   static const List<Widget> _widgetOptions = <Widget>[

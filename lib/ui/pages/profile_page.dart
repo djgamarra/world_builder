@@ -33,8 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final status = _authController.currentStatus.value as AuthOkStatus;
     final user = status.userData;
     Future.wait([
-      _followingsController.ensureLoaded(params: {'uid': user.uid}),
-      _followersController.ensureLoaded(params: {'uid': user.uid}),
+      _followingsController.ensureLoaded(),
+      _followersController.ensureLoaded(),
     ]);
     _data['fullName'] = user.fullName;
     _data['taste'] = user.taste;
