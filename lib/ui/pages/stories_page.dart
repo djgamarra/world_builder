@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:world_builder/controllers/clubs_controller.dart';
+import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/ui/pages/create_club.dart';
+import 'package:world_builder/ui/widgets/story_item.dart';
 
 import '../constants.dart';
 
@@ -10,6 +15,26 @@ class StoriesPage extends StatefulWidget {
 }
 
 class _StoriesPageState extends State<StoriesPage> {
+  final _clubsController = Get.find<ClubsController>();
+
+  _StoriesPageState() {
+    _clubsController.ensureLoaded();
+  }
+
+  void _onCreateBtnClick() {
+    Get.to(() => const CreateClub());
+  }
+
+  var historias = ["his1", "his2"];
+  Widget _renderStories() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: historias
+            .map((story) => StoryItem(
+                  story: story,
+                ))
+            .toList(),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +43,7 @@ class _StoriesPageState extends State<StoriesPage> {
           Icons.add,
           color: defaultBorderColor,
         ),
-        onPressed: () {},
+        onPressed: _onCreateBtnClick,
         backgroundColor: const Color(0xFF9BDBFF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -26,9 +51,17 @@ class _StoriesPageState extends State<StoriesPage> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Text(
-              'Tus historias',
-              style: primaryFont.copyWith(fontSize: 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Historias',
+                  style: primaryFont.copyWith(fontSize: 25),
+                ),
+                const SizedBox(height: 30),
+                _renderStories(),
+                const SizedBox(height: 50),
+              ],
             ),
           ),
         ),
