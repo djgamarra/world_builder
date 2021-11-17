@@ -4,6 +4,7 @@ import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/clubs_controller.dart';
 import 'package:world_builder/controllers/followers_controller.dart';
 import 'package:world_builder/controllers/followings_controller.dart';
+import 'package:world_builder/controllers/invitations_controller.dart';
 import 'package:world_builder/controllers/user_search_controller.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/clubs_page.dart';
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
     Get.find<FollowersController>()
         .resetData(params: {'uid': status.userData.uid});
     Get.find<ClubsController>().resetData(params: {'uid': status.userData.uid});
+    Get.find<InvitationsController>()
+        .resetData(params: {'uid': status.userData.uid});
   }
 
   static const List<Widget> _widgetOptions = <Widget>[

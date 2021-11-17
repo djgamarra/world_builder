@@ -24,13 +24,9 @@ class FirestoreService {
   Future<List<T>> getDocsById<T>(
     String path,
     List<String> ids,
-    T Function(String, Map<String, dynamic>) mapper, [
-    String? orderField,
-  ]) async {
+    T Function(String, Map<String, dynamic>) mapper,
+  ) async {
     var _query = query(path).where(FieldPath.documentId, whereIn: ids);
-    if (orderField != null) {
-      _query = _query.orderBy(orderField);
-    }
     return (await _query.get())
         .docs
         .map((e) => mapper(e.id, e.data()))

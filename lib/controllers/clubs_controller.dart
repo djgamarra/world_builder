@@ -30,12 +30,11 @@ class ClubsController extends DataController<List<Club>> {
           id: uid,
           ownerId: data['ownerId'] ?? '',
           createdAt: (data['createdAt'] as Timestamp).toDate(),
-          members: data['members'] ?? '',
+          members: data['members'] ?? 0,
           gender: data['gender'] ?? '',
           name: data['name'] ?? '',
           description: data['description'] ?? '',
         ),
-        'name',
       ))) {
         clubsMap[club.id] = club;
       }

@@ -12,6 +12,10 @@ class ClubItem extends StatelessWidget {
     required this.club,
   }) : super(key: key);
 
+  void _onItemClick() => Get.to(() => ClubPage(
+        club: club,
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -22,7 +26,7 @@ class ClubItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: InkWell(
-        onTap: () => Get.to(ClubPage()),
+        onTap: _onItemClick,
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
@@ -30,7 +34,7 @@ class ClubItem extends StatelessWidget {
             children: [
               Text(
                 club.name,
-                style: primaryFont.copyWith(fontSize: 22),
+                style: primaryFont.copyWith(fontSize: 20),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,

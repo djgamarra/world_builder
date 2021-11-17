@@ -34,7 +34,8 @@ abstract class DataController<T> {
       data.value = await loader();
       loadStatus.value = DataLoadStatus.loaded;
     } catch (e) {
-      print(e);
+      e.printError();
+      print(errorMessage);
       loadStatus.value = DataLoadStatus.loadedWError;
     }
   }

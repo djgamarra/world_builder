@@ -7,25 +7,23 @@ import 'package:world_builder/services/users_service.dart';
 
 class FollowingsController extends DataController<Map<String, Reference>> {
   final _users = Get.find<UsersService>();
-  StreamSubscription? _sub;
+  // StreamSubscription? _sub;
 
   FollowingsController() : super({});
 
-  int get count => data.value.length;
-
-  @override
-  void setParams(Map<String, dynamic>? params) {
-    super.setParams(params);
-    if (params != null && params['uid'] != null) {
-      if (_sub != null) {
-        _sub!.cancel().then((_) {
-          _sub = _users.subscribeToFollowings(params['uid'], (_) => reload());
-        });
-      } else {
-        _sub = _users.subscribeToFollowings(params['uid'], (_) => reload());
-      }
-    }
-  }
+  // @override
+  // void setParams(Map<String, dynamic>? params) {
+  //   super.setParams(params);
+  //   if (params != null && params['uid'] != null) {
+  //     if (_sub != null) {
+  //       _sub!.cancel().then((_) {
+  //         _sub = _users.subscribeToFollowings(params['uid'], (_) => reload());
+  //       });
+  //     } else {
+  //       _sub = _users.subscribeToFollowings(params['uid'], (_) => reload());
+  //     }
+  //   }
+  // }
 
   @override
   final String errorMessage = 'Error al cargar la lista de seguidos';

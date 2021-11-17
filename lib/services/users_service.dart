@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/models/club.dart';
+import 'package:world_builder/models/invitation.dart';
 import 'package:world_builder/models/reference.dart';
 import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/services/firestore_service.dart';
@@ -101,8 +102,19 @@ class UsersService {
         ),
       );
 
-  Future<List<Club>> getClubsCreatedBy(String uid) async =>
-      (await _store.query('clubs').where('ownerId', isEqualTo: uid).orderBy('createdAt', descending: true).get())
+  Future<List<Invitation>> getInvitationsOf(String uid) => _store.getDocs(
+        "users_public/$uid/invitations",
+        (id, data) => Invitation(
+          clubId: id,
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+        ),
+      );
+
+  Future<List<Club>> getClubsCreatedBy(String uid) async => (await _store
+              .query('clubs')
+              .where('ownerId', isEqualTo: uid)
+              .orderBy('createdAt', descending: true)
+              .get())
           .docs
           .map((doc) {
         final data = doc.data();
@@ -136,7 +148,7 @@ class UsersService {
           String uid, Function(QuerySnapshot) func) =>
       _store.query("users_public/$uid/followers").snapshots().listen(func);
 
-  StreamSubscription subscribeToFollowings(
+  StreamSubscription subscribeToInvitations(
           String uid, Function(QuerySnapshot) func) =>
-      _store.query("users_public/$uid/followings").snapshots().listen(func);
+      _store.query("users_public/$uid/invitations").snapshots().listen(func);
 }
