@@ -19,5 +19,6 @@ class Club {
         'gender': gender,
         'ownerId': ownerId,
         'createdAt': createdAt,
+        'members': 0,
       };
 }

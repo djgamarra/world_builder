@@ -70,6 +70,14 @@ class InvitationsController extends DataController<List<Invitation>> {
           invitation.clubId,
           {'createdAt': DateTime.now()},
         ),
+        _store.set(
+          'clubs',
+          invitation.clubId,
+          {
+            ...invitation.club!.toFirestoreMap(),
+            'members': FieldValue.increment(1),
+          },
+        ),
         _store.delete(
           "users_public/${params['uid']}/invitations",
           invitation.clubId,
