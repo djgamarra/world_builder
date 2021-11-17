@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import '../constants.dart';
 
 class StoriesPage extends StatefulWidget {
   const StoriesPage({Key? key}) : super(key: key);
@@ -11,29 +12,23 @@ class StoriesPage extends StatefulWidget {
 class _StoriesPageState extends State<StoriesPage> {
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
     return Scaffold(
-      body: Center(
-        child: Scaffold(
-          body:
-              // ignore: sized_box_for_whitespace
-              Container(
-            width: mediaQuery.size.width,
-            height: mediaQuery.size.height - 70,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: mediaQuery.size.width,
-                  height: mediaQuery.size.height * .15,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                  child: Text(
-                    'Tus Historias',
-                    style: GoogleFonts.play(fontSize: 30),
-                  ),
-                ),
-              ],
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add,
+          color: defaultBorderColor,
+        ),
+        onPressed: () {},
+        backgroundColor: const Color(0xFF9BDBFF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'Tus historias',
+              style: primaryFont.copyWith(fontSize: 25),
             ),
           ),
         ),
