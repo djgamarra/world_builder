@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:world_builder/ui/pages/create_club.dart';
 import 'package:world_builder/ui/widgets/club_item.dart';
 import '../constants.dart';
+import 'package:get/get.dart';
 
 const listclub = [
   "chiste",
@@ -43,7 +45,7 @@ class _ClubsPageState extends State<ClubsPage> {
           Icons.add,
           color: defaultBorderColor,
         ),
-        onPressed: () {},
+        onPressed: () => Get.to(CreateClub()),
         backgroundColor: const Color(0xFF9BDBFF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
