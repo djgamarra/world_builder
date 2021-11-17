@@ -1,23 +1,68 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/controllers/invitations_controller.dart';
 import 'package:world_builder/models/club.dart';
+import 'package:world_builder/ui/utils.dart';
+import 'package:world_builder/ui/widgets/custom_button.dart';
+import 'package:world_builder/ui/widgets/custom_text_field.dart';
 
 import '../constants.dart';
 
 class ClubPage extends StatelessWidget {
-//   final _followingsController = Get.find<FollowingsController>();
-//   final _userFollowingsController = FollowingsController();
-//   final _userFollowersController = FollowersController();
-  // final String name = "Mami";
+  final _invitationsController = Get.find<InvitationsController>();
   final Club club;
+  final _formKey = GlobalKey<FormState>();
 
-  const ClubPage({
+  ClubPage({
     Key? key,
     required this.club,
   }) : super(key: key);
 
   void _onGoBackClick() => Get.back();
+
+  void _onSendInvitationBtnClick(String username) async {
+    if (_formKey.currentState!.validate()) {
+      Get.back();
+      Get.snackbar('Correcto', 'Invitación enviada');
+      await _invitationsController.sendInvitation(username, club.id);
+    }
+  }
+
+  void _onInviteBtnClick() async {
+    String username = '';
+    await Get.defaultDialog(
+      title: 'Invitar a club',
+      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      titlePadding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+      titleStyle: primaryFont.copyWith(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Form(
+            key: _formKey,
+            child: CustomTextField(
+              onChanged: (_, text) {
+                username = text;
+              },
+              label: 'Nombre de usuario',
+              validator: usernameValidator,
+            ),
+          ),
+          const SizedBox(height: 10),
+          CustomButton(
+            text: 'ENVIAR INVITACIÓN',
+            onClick: () => _onSendInvitationBtnClick(username),
+            fullWidth: true,
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _renderMembersBox() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +117,7 @@ class ClubPage extends StatelessWidget {
                     ),
                     IconButton(
                       tooltip: 'Inivitar Miembro',
-                      onPressed: () {},
+                      onPressed: _onInviteBtnClick,
                       icon: const Icon(Icons.person_add),
                       color: defaultBorderColor,
                     ),

@@ -104,54 +104,56 @@ class _LoginPageState extends State<LoginPage> {
             fit: BoxFit.fill,
           ),
         ),
-        child: Container(
-          width: mediaQuery.size.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: <Color>[
-                Color(0x00CCDDE7),
-                Color(0x88CCDDE7),
-                Color(0xAACCDDE7),
-              ],
-              stops: <double>[0, .23, .6],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const SizedBox(height: 60),
-                  SvgPicture.asset(
-                    'assets/logo_login.svg',
-                    semanticsLabel: 'World Builder Logo',
-                    fit: BoxFit.scaleDown,
-                  ),
-                  const SizedBox(height: 40),
-                  CustomTextField(
-                    field: 'email',
-                    label: 'Correo electrónico',
-                    onChanged: _onFieldChanged,
-                    type: TextInputType.emailAddress,
-                    validator: emailValidator,
-                  ),
-                  const SizedBox(height: 25),
-                  CustomTextField(
-                    field: 'password',
-                    label: 'Contraseña',
-                    onChanged: _onFieldChanged,
-                    type: TextInputType.visiblePassword,
-                    obscureText: true,
-                    validator: passwordValidator,
-                  ),
-                  const SizedBox(height: 25),
-                  _renderActionButtons(),
-                  const SizedBox(height: 30),
+        child: SingleChildScrollView(
+          child: Container(
+            width: mediaQuery.size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0x00CCDDE7),
+                  Color(0x88CCDDE7),
+                  Color(0xAACCDDE7),
                 ],
+                stops: <double>[0, .23, .6],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 60),
+                    SvgPicture.asset(
+                      'assets/logo_login.svg',
+                      semanticsLabel: 'World Builder Logo',
+                      fit: BoxFit.scaleDown,
+                    ),
+                    const SizedBox(height: 40),
+                    CustomTextField(
+                      field: 'email',
+                      label: 'Correo electrónico',
+                      onChanged: _onFieldChanged,
+                      type: TextInputType.emailAddress,
+                      validator: emailValidator,
+                    ),
+                    const SizedBox(height: 25),
+                    CustomTextField(
+                      field: 'password',
+                      label: 'Contraseña',
+                      onChanged: _onFieldChanged,
+                      type: TextInputType.visiblePassword,
+                      obscureText: true,
+                      validator: passwordValidator,
+                    ),
+                    const SizedBox(height: 25),
+                    _renderActionButtons(),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),

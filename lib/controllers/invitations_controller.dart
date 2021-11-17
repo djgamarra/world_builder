@@ -70,13 +70,10 @@ class InvitationsController extends DataController<List<Invitation>> {
           invitation.clubId,
           {'createdAt': DateTime.now()},
         ),
-        _store.set(
+        _store.update(
           'clubs',
           invitation.clubId,
-          {
-            ...invitation.club!.toFirestoreMap(),
-            'members': FieldValue.increment(1),
-          },
+          {'members': FieldValue.increment(1)},
         ),
         _store.delete(
           "users_public/${params['uid']}/invitations",
@@ -99,6 +96,27 @@ class InvitationsController extends DataController<List<Invitation>> {
       return true;
     } catch (e) {
       e.printError();
+      return false;
+    }
+  }
+
+  Future<bool> sendInvitation(String username, String clubId) async {
+    try {
+      final users = (await _store
+              .query('users_public')
+              .where('username', isEqualTo: username)
+              .limit(1)
+              .get())
+          .docs;
+      if (users.isNotEmpty) return true;
+      final userId = users.first.id;
+      await _store.set(
+        "users_public/$userId/invitations",
+        clubId,
+        {'createdAt': DateTime.now()},
+      );
+      return true;
+    } catch (e) {
       return false;
     }
   }
