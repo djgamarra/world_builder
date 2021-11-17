@@ -177,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       'Mi cuenta',
-                      style: primaryFont.copyWith(fontSize: 30),
+                      style: primaryFont.copyWith(fontSize: 25),
                     ),
                     IconButton(
                       tooltip: 'Cerrar sesión',

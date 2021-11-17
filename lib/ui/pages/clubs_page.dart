@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import '../constants.dart';
 
 class ClubsPage extends StatefulWidget {
   const ClubsPage({Key? key}) : super(key: key);
@@ -15,30 +16,21 @@ class _ClubsPageState extends State<ClubsPage> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: defaultBorderColor,
+        ),
         onPressed: () {},
-        backgroundColor: Color(0xFF9BDBFF),
+        backgroundColor: const Color(0xFF9BDBFF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
-      body: Center(
-        child: Scaffold(
-          body:
-              // ignore: sized_box_for_whitespace
-              Container(
-            width: mediaQuery.size.width,
-            height: mediaQuery.size.height - 70,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: mediaQuery.size.width,
-                  height: mediaQuery.size.height * .15,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                  child: Text(
-                    'Clubes',
-                    style: GoogleFonts.play(fontSize: 30),
-                  ),
-                ),
-              ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'Clubes',
+              style: primaryFont.copyWith(fontSize: 25),
             ),
           ),
         ),
