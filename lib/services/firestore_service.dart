@@ -12,9 +12,6 @@ class FirestoreService {
   Future<DocumentSnapshot<Map<String, dynamic>>> get(String path, String doc) =>
       store.collection(path).doc(doc).get();
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getAll(String path) =>
-      store.collection(path).get();
-
   Future<List<T>> getDocs<T>(
           String path, T Function(String, Map<String, dynamic>) mapper) async =>
       (await query(path).get())
