@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/clubs_controller.dart';
 import 'package:world_builder/controllers/followers_controller.dart';
+import 'package:world_builder/controllers/invitations_controller.dart';
 import 'package:world_builder/services/auth_service.dart';
 import 'package:world_builder/services/firestore_service.dart';
 import 'package:world_builder/services/users_service.dart';
@@ -27,6 +28,7 @@ void main() async {
   Get.put(FollowingsController());
   Get.put(FollowersController());
   Get.put(ClubsController());
+  Get.put(InvitationsController());
   runApp(const MyApp());
 }
 

@@ -11,8 +11,6 @@ class FollowersController extends DataController<Map<String, Reference>> {
 
   FollowersController() : super({});
 
-  int get count => data.value.length;
-
   @override
   void setParams(Map<String, dynamic>? params) {
     super.setParams(params);

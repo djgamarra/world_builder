@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:world_builder/controllers/data_controller.dart';
-// import 'package:world_builder/controllers/followers_controller.dart';
-// import 'package:world_builder/controllers/followings_controller.dart';
-// import 'package:world_builder/models/user_data.dart';
+import 'package:world_builder/models/club.dart';
 
 import '../constants.dart';
 
@@ -13,10 +10,12 @@ class ClubPage extends StatelessWidget {
 //   final _userFollowingsController = FollowingsController();
 //   final _userFollowersController = FollowersController();
   // final String name = "Mami";
+  final Club club;
 
-  // ClubPage({
-  //   Key? key,
-  // }) : super(key: key) {}
+  const ClubPage({
+    Key? key,
+    required this.club,
+  }) : super(key: key);
 
   void _onGoBackClick() => Get.back();
 
@@ -37,7 +36,7 @@ class ClubPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "69",
+                    club.members.toString(),
                     style: primaryFont,
                   ),
                 ],
@@ -68,11 +67,11 @@ class ClubPage extends StatelessWidget {
                       color: defaultBorderColor,
                     ),
                     Text(
-                      "Club Gay",
+                      club.name,
                       style: primaryFont.copyWith(fontSize: 25),
                     ),
                     IconButton(
-                      tooltip: 'Agregar Miembro',
+                      tooltip: 'Inivitar Miembro',
                       onPressed: () {},
                       icon: const Icon(Icons.person_add),
                       color: defaultBorderColor,
@@ -97,7 +96,7 @@ class ClubPage extends StatelessWidget {
                 const SizedBox(height: 30),
                 const SizedBox(height: 5),
                 Text(
-                  "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.",
+                  club.description,
                   textAlign: TextAlign.justify,
                   style: primaryFont.copyWith(
                     fontSize: 17,
