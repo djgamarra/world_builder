@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/models/character.dart';
 import 'package:world_builder/ui/pages/fullstory_page.dart';
 import 'package:world_builder/ui/widgets/character_item.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
+
 // import 'package:world_builder/controllers/data_controller.dart';
 // import 'package:world_builder/controllers/followers_controller.dart';
 // import 'package:world_builder/controllers/followings_controller.dart';
@@ -21,13 +23,10 @@ class StoryPage extends StatelessWidget {
   //   Key? key,
   // }) : super(key: key) {}
 
-  var names = ["Alejandra Reales", "Pablo Escobar"];
   Widget _renderCharacters() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: names
-            .map((name) => CharacterItem(
-                  name: name,
-                ))
+        children: <Character>[]
+            .map((character) => CharacterItem(character: character))
             .toList(),
       );
 

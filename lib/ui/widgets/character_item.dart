@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:world_builder/models/club.dart';
+import 'package:world_builder/models/character.dart';
 import 'package:world_builder/ui/constants.dart';
-import 'package:world_builder/ui/pages/character_page.dart';
 
 class CharacterItem extends StatelessWidget {
-  final String name;
+  final Character character;
+  final Function(Character)? onCharacterDelete;
 
   const CharacterItem({
     Key? key,
-    required this.name,
+    required this.character,
+    this.onCharacterDelete,
   }) : super(key: key);
 
   @override
@@ -21,23 +21,38 @@ class CharacterItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: InkWell(
-        onTap: () => Get.to(CharacterPage()),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                name,
-                style: primaryFont.copyWith(fontSize: 17),
-              ),
-              Text(
-                "Villano",
-                style: primaryFont.copyWith(fontSize: 17),
-              ),
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Text(
+                  character.name,
+                  style: primaryFont.copyWith(fontSize: 17),
+                ),
+                Text(
+                  '  como  ',
+                  style: primaryFont.copyWith(
+                    fontSize: 17,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Text(
+                  character.role,
+                  style: primaryFont.copyWith(fontSize: 17),
+                ),
+              ],
+            ),
+            InkWell(
+              onTap: () => onCharacterDelete == null
+                  ? null
+                  : onCharacterDelete!(character),
+              child: const Icon(Icons.close),
+            ),
+          ],
         ),
       ),
     );

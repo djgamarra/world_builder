@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/models/character.dart';
 import 'package:world_builder/models/club.dart';
 import 'package:world_builder/models/invitation.dart';
 import 'package:world_builder/models/reference.dart';
+import 'package:world_builder/models/story.dart';
 import 'package:world_builder/models/user_data.dart';
 import 'package:world_builder/services/firestore_service.dart';
 
@@ -126,6 +128,33 @@ class UsersService {
           description: data['description'] ?? '',
           gender: data['gender'] ?? '',
           members: data['members'] ?? 0,
+        );
+      }).toList();
+
+  Future<List<Story>> getStoriesCreatedBy(String uid) async => (await _store
+              .query('stories')
+              .where('ownerId', isEqualTo: uid)
+              .orderBy('createdAt', descending: true)
+              .get())
+          .docs
+          .map((doc) {
+        final data = doc.data();
+        return Story(
+          id: doc.id,
+          name: data['name'] ?? '',
+          gender: data['gender'] ?? '',
+          completeStory: data['completeStory'] ?? '',
+          ownerId: data['ownerId'] ?? '',
+          place: data['place'] ?? '',
+          synopsis: data['synopsis'] ?? '',
+          characters: ((data['characters'] ?? []) as List<Map<String, dynamic>>)
+              .map(
+                (character) => Character(
+                  name: character['name'],
+                  role: character['role'],
+                ),
+              )
+              .toList(),
         );
       }).toList();
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/controllers/clubs_controller.dart';
-import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/controllers/stories_controller.dart';
 import 'package:world_builder/ui/pages/create_story.dart';
 import 'package:world_builder/ui/widgets/story_item.dart';
 
@@ -15,10 +14,10 @@ class StoriesPage extends StatefulWidget {
 }
 
 class _StoriesPageState extends State<StoriesPage> {
-  final _clubsController = Get.find<ClubsController>();
+  final _storiesController = Get.find<StoriesController>();
 
   _StoriesPageState() {
-    _clubsController.ensureLoaded();
+    _storiesController.ensureLoaded();
   }
 
   void _onCreateBtnClick() {
@@ -26,6 +25,7 @@ class _StoriesPageState extends State<StoriesPage> {
   }
 
   var historias = ["his1", "his2"];
+
   Widget _renderStories() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: historias

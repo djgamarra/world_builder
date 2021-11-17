@@ -62,6 +62,16 @@ String? clubNameValidator(String? name) {
   return null;
 }
 
+String? storyNameValidator(String? name) {
+  if (name == null || name.isEmpty) {
+    return 'Campo requerido';
+  }
+  if (name.length > 40) {
+    return 'Máximo 40 caracteres';
+  }
+  return null;
+}
+
 String? notEmptyValidator(String? text) {
   if (text == null || text.isEmpty) {
     return 'Campo requerido';
