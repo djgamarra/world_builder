@@ -62,7 +62,7 @@ class _ClubsPageState extends State<ClubsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Clubes',
+                  'Mis clubes',
                   style: primaryFont.copyWith(fontSize: 25),
                 ),
                 const SizedBox(height: 30),
