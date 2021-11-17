@@ -62,7 +62,7 @@ class _CreateStoryState extends State<CreateStory> {
       });
 
   void _onCharacterAddBtnClick() => Get.defaultDialog(
-        title: 'Invitar a club',
+        title: 'Datos del personaje',
         contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         titlePadding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
         titleStyle: primaryFont.copyWith(
