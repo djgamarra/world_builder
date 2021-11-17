@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
         selectedItemColor: defaultBorderColor,
         unselectedItemColor: defaultBorderColor.withOpacity(.8),
-        backgroundColor: defaultBackgroundColor,
+        backgroundColor: const Color(0xFFE1F4FF),
       ),
     );
   }
