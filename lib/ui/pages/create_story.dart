@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:world_builder/controllers/auth_controller.dart';
 import 'package:world_builder/controllers/stories_controller.dart';
 import 'package:world_builder/models/character.dart';
+import 'package:world_builder/models/story.dart';
 import 'package:world_builder/ui/widgets/character_item.dart';
 import 'package:world_builder/ui/widgets/character_modal.dart';
 import 'package:world_builder/ui/widgets/custom_text_field.dart';
@@ -11,10 +12,15 @@ import '../constants.dart';
 import '../utils.dart';
 
 class CreateStory extends StatefulWidget {
-  const CreateStory({Key? key}) : super(key: key);
+  final Story? story;
+
+  const CreateStory({
+    Key? key,
+    this.story,
+  }) : super(key: key);
 
   @override
-  State<CreateStory> createState() => _CreateStoryState();
+  State<CreateStory> createState() => _CreateStoryState(story);
 }
 
 class _CreateStoryState extends State<CreateStory> {
@@ -29,6 +35,19 @@ class _CreateStoryState extends State<CreateStory> {
     'completeStory': '',
   };
   final _characters = <Character>[];
+  final Story? story;
+
+  _CreateStoryState(this.story) {
+    final story = this.story;
+    if (story != null) {
+      _data['name'] = story.name;
+      _data['gender'] = story.gender;
+      _data['synopsis'] = story.synopsis;
+      _data['place'] = story.place;
+      _data['completeStory'] = story.completeStory;
+      _characters.addAll(story.characters);
+    }
+  }
 
   void _onFieldChanged(String field, String value) => setState(() {
         _data[field] = value;
@@ -65,6 +84,7 @@ class _CreateStoryState extends State<CreateStory> {
         _data['place']!,
         _data['completeStory']!,
         _characters,
+        story == null ? null : story!.id,
       );
       _storiesController.reload();
       Get.back();
@@ -103,13 +123,14 @@ class _CreateStoryState extends State<CreateStory> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Crea tu nueva historia!',
+                    story == null ? 'Crea tu nueva historia!' : 'Editar',
                     style: primaryFont.copyWith(fontSize: 25),
                   ),
                   const SizedBox(height: 30),
                   CustomTextField(
                     label: 'Nombre de la historia',
                     field: 'name',
+                    initialValue: _data['name'],
                     validator: storyNameValidator,
                     onChanged: _onFieldChanged,
                   ),
@@ -117,6 +138,7 @@ class _CreateStoryState extends State<CreateStory> {
                   CustomTextField(
                     label: 'Género',
                     field: 'gender',
+                    initialValue: _data['gender'],
                     validator: notEmptyValidator,
                     onChanged: _onFieldChanged,
                   ),
@@ -124,6 +146,7 @@ class _CreateStoryState extends State<CreateStory> {
                   CustomTextField(
                     label: 'Sinopsis',
                     field: 'synopsis',
+                    initialValue: _data['synopsis'],
                     validator: notEmptyValidator,
                     onChanged: _onFieldChanged,
                     type: TextInputType.multiline,
@@ -151,6 +174,7 @@ class _CreateStoryState extends State<CreateStory> {
                   CustomTextField(
                     label: 'Lugar principal',
                     field: 'place',
+                    initialValue: _data['place'],
                     validator: notEmptyValidator,
                     onChanged: _onFieldChanged,
                   ),
@@ -158,6 +182,7 @@ class _CreateStoryState extends State<CreateStory> {
                   CustomTextField(
                     label: 'Historia completa',
                     field: 'completeStory',
+                    initialValue: _data['completeStory'],
                     validator: notEmptyValidator,
                     onChanged: _onFieldChanged,
                     type: TextInputType.multiline,

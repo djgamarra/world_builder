@@ -27,7 +27,6 @@ class _StoriesPageState extends State<StoriesPage> {
 
   Widget _renderStories() => Obx(() {
         switch (_storiesController.loadStatus.value) {
-          case DataLoadStatus.loading:
           case DataLoadStatus.loaded:
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +37,10 @@ class _StoriesPageState extends State<StoriesPage> {
                   .toList(),
             );
           default:
-            return Container();
+            return Text(
+              'Cargando...',
+              style: primaryFont.copyWith(fontSize: 25),
+            );
         }
       });
 

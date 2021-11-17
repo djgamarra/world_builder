@@ -2,22 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/models/story.dart';
+import 'package:world_builder/ui/pages/create_story.dart';
 import 'package:world_builder/ui/pages/fullstory_page.dart';
 import 'package:world_builder/ui/widgets/character_item.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
 
-// import 'package:world_builder/controllers/data_controller.dart';
-// import 'package:world_builder/controllers/followers_controller.dart';
-// import 'package:world_builder/controllers/followings_controller.dart';
-// import 'package:world_builder/models/user_data.dart';
-
 import '../constants.dart';
 
 class StoryPage extends StatelessWidget {
-//   final _followingsController = Get.find<FollowingsController>();
-//   final _userFollowingsController = FollowingsController();
-//   final _userFollowersController = FollowersController();
-  // final String name = "Mami";
   final Story story;
 
   const StoryPage({
@@ -96,8 +88,7 @@ class StoryPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.center,
                   child: CustomButton(
-                    backgroundColor: defaultBorderColor,
-                    color: Colors.white,
+                    solid: true,
                     text: "Ver historia completa",
                     onClick: () => Get.to(() => FullStoryPage(story: story)),
                   ),
@@ -131,6 +122,14 @@ class StoryPage extends StatelessWidget {
                   style: primaryFont.copyWith(
                     fontSize: 17,
                     color: defaultBorderColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.center,
+                  child: CustomButton(
+                    text: "Editar",
+                    onClick: () => Get.to(() => CreateStory(story: story)),
                   ),
                 ),
               ],

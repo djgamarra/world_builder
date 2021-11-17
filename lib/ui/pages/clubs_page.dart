@@ -32,7 +32,6 @@ class _ClubsPageState extends State<ClubsPage> {
   Widget _renderClubResults() => Obx(() {
         switch (_clubsController.loadStatus.value) {
           case DataLoadStatus.loaded:
-          case DataLoadStatus.loading:
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _clubsController.data.value
@@ -51,7 +50,6 @@ class _ClubsPageState extends State<ClubsPage> {
 
   Widget _renderInvitationsWidget() => Obx(() {
         switch (_invitationsController.loadStatus.value) {
-          case DataLoadStatus.loading:
           case DataLoadStatus.loaded:
             if (_invitationsController.data.value.isNotEmpty) {
               return Column(
@@ -69,10 +67,14 @@ class _ClubsPageState extends State<ClubsPage> {
                   const SizedBox(height: 30),
                 ],
               );
+            } else {
+              return Container();
             }
-            return Container();
           default:
-            return Container();
+            return Text(
+              'Cargando...',
+              style: primaryFont.copyWith(fontSize: 25),
+            );
         }
       });
 

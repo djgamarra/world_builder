@@ -22,7 +22,7 @@ class StoryItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: InkWell(
-        onTap: () => Get.to(StoryPage(story: story,)),
+        onTap: () => Get.to(() => StoryPage(story: story,)),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(

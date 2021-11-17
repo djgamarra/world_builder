@@ -25,6 +25,7 @@ class StoriesController extends DataController<List<Story>> {
     String place,
     String completeStory,
     List<Character> characters,
+      [String? doc,]
   ) async {
     final story = Story(
       id: '',
@@ -38,7 +39,7 @@ class StoriesController extends DataController<List<Story>> {
       createdAt: DateTime.now(),
     );
     try {
-      await _store.set('stories', null, story.toFirestoreMap());
+      await _store.set('stories', doc, story.toFirestoreMap());
       return true;
     } catch (e) {
       e.printError();
