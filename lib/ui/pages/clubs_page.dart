@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/clubs_controller.dart';
+import 'package:world_builder/controllers/data_controller.dart';
 import 'package:world_builder/ui/widgets/club_item.dart';
 
 import '../constants.dart';
+import 'create_club.dart';
 
 class ClubsPage extends StatefulWidget {
   const ClubsPage({Key? key}) : super(key: key);
@@ -19,14 +21,26 @@ class _ClubsPageState extends State<ClubsPage> {
     _clubsController.ensureLoaded();
   }
 
-  Widget _renderClubResults() => Obx(() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _clubsController.data.value
-            .map((club) => ClubItem(
-                  club: club,
-                ))
-            .toList(),
-      ));
+  void _onCreateBtnClick() => Get.to(() => const CreateClub());
+
+  Widget _renderClubResults() => Obx(() {
+        switch (_clubsController.loadStatus.value) {
+          case DataLoadStatus.loaded:
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _clubsController.data.value
+                  .map((club) => ClubItem(
+                        club: club,
+                      ))
+                  .toList(),
+            );
+          default:
+            return Text(
+              'Cargando...',
+              style: primaryFont.copyWith(fontSize: 17),
+            );
+        }
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +50,7 @@ class _ClubsPageState extends State<ClubsPage> {
           Icons.add,
           color: defaultBorderColor,
         ),
-        onPressed: () {},
+        onPressed: _onCreateBtnClick,
         backgroundColor: const Color(0xFF9BDBFF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),

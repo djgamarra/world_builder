@@ -31,7 +31,7 @@ class ClubItem extends StatelessWidget {
                 style: primaryFont.copyWith(fontSize: 22),
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     club.gender,

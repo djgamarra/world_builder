@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreService {
   FirebaseFirestore get store => FirebaseFirestore.instance;
 
-  Future<void> set(String path, String doc, Map<String, dynamic> data) =>
+  Future<void> set(String path, String? doc, Map<String, dynamic> data) =>
       store.collection(path).doc(doc).set(data);
 
   Future<void> delete(String path, String doc) =>
@@ -24,12 +24,18 @@ class FirestoreService {
   Future<List<T>> getDocsById<T>(
     String path,
     List<String> ids,
-    T Function(String, Map<String, dynamic>) mapper,
-  ) async =>
-      (await query(path).where(FieldPath.documentId, whereIn: ids).get())
-          .docs
-          .map((e) => mapper(e.id, e.data()))
-          .toList();
+    T Function(String, Map<String, dynamic>) mapper, [
+    String? orderField,
+  ]) async {
+    var _query = query(path).where(FieldPath.documentId, whereIn: ids);
+    if (orderField != null) {
+      _query = _query.orderBy(orderField);
+    }
+    return (await _query.get())
+        .docs
+        .map((e) => mapper(e.id, e.data()))
+        .toList();
+  }
 
   CollectionReference<Map<String, dynamic>> query(String path) =>
       store.collection(path);

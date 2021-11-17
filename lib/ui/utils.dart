@@ -51,3 +51,10 @@ String? usernameSearchValidator(String? username) {
   }
   return null;
 }
+
+String? notEmptyValidator(String? text) {
+  if (text == null || text.isEmpty) {
+    return 'Campo requerido';
+  }
+  return null;
+}

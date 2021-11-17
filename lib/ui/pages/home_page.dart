@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _authController = Get.find<AuthController>();
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   _HomePageState() {
     final status = _authController.currentStatus.value as AuthOkStatus;

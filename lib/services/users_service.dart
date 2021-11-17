@@ -42,11 +42,11 @@ class UsersService {
       final data = e.data();
       return ExternalUserData(
         uid: e.id,
-        username: data['username']!,
-        taste: data['taste']!,
-        interests: data['interests']!,
-        writerOf: data['writerOf']!,
-        region: data['region']!,
+        username: data['username'] ?? '',
+        taste: data['taste'] ?? '',
+        interests: data['interests'] ?? '',
+        writerOf: data['writerOf'] ?? '',
+        region: data['region'] ?? '',
       );
     }).toList();
   }
@@ -93,15 +93,29 @@ class UsersService {
         ),
       );
 
-  Future<List<Club>> getClubsOf(String uid) => _store.getDocs(
+  Future<List<Reference>> getClubsOf(String uid) => _store.getDocs(
         "users_public/$uid/clubs",
-        (uid, data) => Club(
-          name: data['name'],
-          description: data['description'],
-          gender: data['gender'],
-          members: data['members'],
+        (uid, data) => Reference(
+          uid: uid,
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
         ),
       );
+
+  Future<List<Club>> getClubsCreatedBy(String uid) async =>
+      (await _store.query('clubs').where('ownerId', isEqualTo: uid).orderBy('createdAt', descending: true).get())
+          .docs
+          .map((doc) {
+        final data = doc.data();
+        return Club(
+          id: doc.id,
+          ownerId: data['ownerId'] ?? '',
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          name: data['name'] ?? '',
+          description: data['description'] ?? '',
+          gender: data['gender'] ?? '',
+          members: data['members'] ?? 0,
+        );
+      }).toList();
 
   Future<void> startFollowing(String from, String to) async {
     final d = DateTime.now();
