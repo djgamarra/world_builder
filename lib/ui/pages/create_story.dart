@@ -115,6 +115,13 @@ class _CreateStoryState extends State<CreateStory> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(
+                    label: 'Género',
+                    field: 'gender',
+                    validator: notEmptyValidator,
+                    onChanged: _onFieldChanged,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
                     label: 'Sinopsis',
                     field: 'synopsis',
                     validator: notEmptyValidator,
@@ -150,7 +157,7 @@ class _CreateStoryState extends State<CreateStory> {
                   const SizedBox(height: 10),
                   CustomTextField(
                     label: 'Historia completa',
-                    field: 'place',
+                    field: 'completeStory',
                     validator: notEmptyValidator,
                     onChanged: _onFieldChanged,
                     type: TextInputType.multiline,

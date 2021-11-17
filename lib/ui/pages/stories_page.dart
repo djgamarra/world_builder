@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:world_builder/controllers/data_controller.dart';
 import 'package:world_builder/controllers/stories_controller.dart';
 import 'package:world_builder/ui/pages/create_story.dart';
 import 'package:world_builder/ui/widgets/story_item.dart';
@@ -24,16 +25,22 @@ class _StoriesPageState extends State<StoriesPage> {
     Get.to(() => const CreateStory());
   }
 
-  var historias = ["his1", "his2"];
-
-  Widget _renderStories() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: historias
-            .map((story) => StoryItem(
-                  story: story,
-                ))
-            .toList(),
-      );
+  Widget _renderStories() => Obx(() {
+        switch (_storiesController.loadStatus.value) {
+          case DataLoadStatus.loading:
+          case DataLoadStatus.loaded:
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _storiesController.data.value
+                  .map((story) => StoryItem(
+                        story: story,
+                      ))
+                  .toList(),
+            );
+          default:
+            return Container();
+        }
+      });
 
   @override
   Widget build(BuildContext context) {

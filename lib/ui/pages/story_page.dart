@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/models/character.dart';
+import 'package:world_builder/models/story.dart';
 import 'package:world_builder/ui/pages/fullstory_page.dart';
 import 'package:world_builder/ui/widgets/character_item.dart';
 import 'package:world_builder/ui/widgets/custom_button.dart';
@@ -18,14 +18,16 @@ class StoryPage extends StatelessWidget {
 //   final _userFollowingsController = FollowingsController();
 //   final _userFollowersController = FollowersController();
   // final String name = "Mami";
+  final Story story;
 
-  // ClubPage({
-  //   Key? key,
-  // }) : super(key: key) {}
+  const StoryPage({
+    Key? key,
+    required this.story,
+  }) : super(key: key);
 
   Widget _renderCharacters() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Character>[]
+        children: story.characters
             .map((character) => CharacterItem(character: character))
             .toList(),
       );
@@ -53,7 +55,7 @@ class StoryPage extends StatelessWidget {
                       color: defaultBorderColor,
                     ),
                     Text(
-                      "Yo quise ser más",
+                      story.name,
                       style: primaryFont.copyWith(fontSize: 25),
                     ),
                   ],
@@ -83,7 +85,7 @@ class StoryPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  story.synopsis,
                   textAlign: TextAlign.justify,
                   style: primaryFont.copyWith(
                     fontSize: 17,
@@ -94,10 +96,11 @@ class StoryPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.center,
                   child: CustomButton(
-                      backgroundColor: defaultBorderColor,
-                      color: Colors.white,
-                      text: "Ver historia completa",
-                      onClick: () => Get.to(FullStoryPage())),
+                    backgroundColor: defaultBorderColor,
+                    color: Colors.white,
+                    text: "Ver historia completa",
+                    onClick: () => Get.to(() => FullStoryPage(story: story)),
+                  ),
                 ),
                 const SizedBox(height: 30),
                 Text(
@@ -123,7 +126,7 @@ class StoryPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "Barranquilla, Colombia.",
+                  story.place,
                   textAlign: TextAlign.justify,
                   style: primaryFont.copyWith(
                     fontSize: 17,

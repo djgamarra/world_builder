@@ -147,7 +147,8 @@ class UsersService {
           ownerId: data['ownerId'] ?? '',
           place: data['place'] ?? '',
           synopsis: data['synopsis'] ?? '',
-          characters: ((data['characters'] ?? []) as List<Map<String, dynamic>>)
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          characters: ((data['characters'] ?? []) as List<dynamic>)
               .map(
                 (character) => Character(
                   name: character['name'],

@@ -50,26 +50,29 @@ class _ClubsPageState extends State<ClubsPage> {
       });
 
   Widget _renderInvitationsWidget() => Obx(() {
-        if ((_invitationsController.loadStatus.value == DataLoadStatus.loaded ||
-                _invitationsController.loadStatus.value ==
-                    DataLoadStatus.loading) &&
-            _invitationsController.data.value.isNotEmpty) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Invitaciones a clubes',
-                style: primaryFont.copyWith(fontSize: 25),
-              ),
-              const SizedBox(height: 30),
-              ..._invitationsController.data.value
-                  .map((invitation) => InvitationItem(invitation: invitation))
-                  .toList(),
-              const SizedBox(height: 30),
-            ],
-          );
-        } else {
-          return Container();
+        switch (_invitationsController.loadStatus.value) {
+          case DataLoadStatus.loading:
+          case DataLoadStatus.loaded:
+            if (_invitationsController.data.value.isNotEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Invitaciones a clubes',
+                    style: primaryFont.copyWith(fontSize: 25),
+                  ),
+                  const SizedBox(height: 30),
+                  ..._invitationsController.data.value
+                      .map((invitation) =>
+                          InvitationItem(invitation: invitation))
+                      .toList(),
+                  const SizedBox(height: 30),
+                ],
+              );
+            }
+            return Container();
+          default:
+            return Container();
         }
       });
 

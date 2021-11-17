@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:world_builder/models/club.dart';
+import 'package:world_builder/models/story.dart';
 import 'package:world_builder/ui/constants.dart';
 import 'package:world_builder/ui/pages/story_page.dart';
 
 class StoryItem extends StatelessWidget {
-  final String story;
+  final Story story;
 
   const StoryItem({
     Key? key,
@@ -22,18 +22,18 @@ class StoryItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: InkWell(
-        onTap: () => Get.to(StoryPage()),
+        onTap: () => Get.to(StoryPage(story: story,)),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                story,
+                story.name,
                 style: primaryFont.copyWith(fontSize: 22),
               ),
               Text(
-                "Gótico",
+                story.gender,
                 style: primaryFont.copyWith(fontSize: 17),
               ),
             ],

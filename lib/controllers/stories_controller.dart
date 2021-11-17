@@ -35,6 +35,7 @@ class StoriesController extends DataController<List<Story>> {
       place: place,
       completeStory: completeStory,
       characters: characters,
+      createdAt: DateTime.now(),
     );
     try {
       await _store.set('stories', null, story.toFirestoreMap());
