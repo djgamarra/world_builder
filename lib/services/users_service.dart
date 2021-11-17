@@ -83,6 +83,15 @@ class UsersService {
         );
       }).toList();
 
+  Future<List<FollowSignature>> getFollowersOf(String uid) async =>
+      (await _store.query("users_public/$uid/followers").get()).docs.map((e) {
+        final data = e.data();
+        return FollowSignature(
+          since: (data['since'] as Timestamp).toDate(),
+          uid: e.id,
+        );
+      }).toList();
+
   Future<void> startFollowing(String from, String to) => _store
       .set("users_public/$from/followings", to, {'since': DateTime.now()});
 

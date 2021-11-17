@@ -3,16 +3,15 @@ import 'package:world_builder/controllers/data_controller.dart';
 import 'package:world_builder/models/follow_signature.dart';
 import 'package:world_builder/services/users_service.dart';
 
-class FollowingsController
-    extends DataController<Map<String, FollowSignature>> {
+class FollowersController extends DataController<Map<String, FollowSignature>> {
   final _users = Get.find<UsersService>();
 
-  FollowingsController() : super({});
+  FollowersController() : super({});
 
   int get followingsCount => data.value.length;
 
   @override
-  final String errorMessage = 'Error al cargar la lista de seguidos';
+  String errorMessage = 'Error al cargar la lista de seguidores';
 
   @override
   Future<Map<String, FollowSignature>> loader() async {
@@ -22,25 +21,5 @@ class FollowingsController
       result[following.uid] = following;
     }
     return result;
-  }
-
-  Future<bool> startFollowing(String uid) async {
-    try {
-      await _users.startFollowing(params['uid'], uid);
-      await reload();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> stopFollowing(String uid) async {
-    try {
-      await _users.stopFollowing(params['uid'], uid);
-      await reload();
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }
