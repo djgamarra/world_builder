@@ -15,15 +15,13 @@ class RegionsController extends DataController<List<Region>> {
 
   @override
   Future<List<Region>> loader() async {
-    final _regions = (await _store.getAll('regions'))
-        .docs
-        .map<Region>(
-          (snapshot) => Region(
-            name: snapshot.data()['name'],
-            code: snapshot.id,
-          ),
-        )
-        .toList();
+    final _regions = await _store.getDocs(
+      'regions',
+      (id, data) => Region(
+        name: data['name'],
+        code: id,
+      ),
+    );
     _regions.sort(
       (regionA, regionB) => regionA.name.compareTo(regionB.name),
     );
