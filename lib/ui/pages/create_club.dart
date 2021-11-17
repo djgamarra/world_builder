@@ -74,7 +74,7 @@ class _CreateClubState extends State<CreateClub> {
                   CustomTextField(
                     label: 'Nombre del club',
                     field: 'name',
-                    validator: notEmptyValidator,
+                    validator: clubNameValidator,
                     onChanged: _onFieldChanged,
                   ),
                   const SizedBox(

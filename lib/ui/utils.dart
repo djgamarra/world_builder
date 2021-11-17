@@ -52,6 +52,16 @@ String? usernameSearchValidator(String? username) {
   return null;
 }
 
+String? clubNameValidator(String? name) {
+  if (name == null || name.isEmpty) {
+    return 'Campo requerido';
+  }
+  if (name.length > 20) {
+    return 'Máximo 20 caracteres';
+  }
+  return null;
+}
+
 String? notEmptyValidator(String? text) {
   if (text == null || text.isEmpty) {
     return 'Campo requerido';

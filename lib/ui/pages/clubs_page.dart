@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:world_builder/controllers/clubs_controller.dart';
 import 'package:world_builder/controllers/data_controller.dart';
+import 'package:world_builder/ui/pages/create_club.dart';
 import 'package:world_builder/ui/widgets/club_item.dart';
 
 import '../constants.dart';
-import 'create_club.dart';
 
 class ClubsPage extends StatefulWidget {
   const ClubsPage({Key? key}) : super(key: key);
@@ -21,7 +21,9 @@ class _ClubsPageState extends State<ClubsPage> {
     _clubsController.ensureLoaded();
   }
 
-  void _onCreateBtnClick() => Get.to(() => const CreateClub());
+  void _onCreateBtnClick() {
+    Get.to(() => const CreateClub());
+  }
 
   Widget _renderClubResults() => Obx(() {
         switch (_clubsController.loadStatus.value) {
